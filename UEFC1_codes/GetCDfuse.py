@@ -10,8 +10,9 @@ def GetCDfuse(UEFC, opt_vars, AR, S):
     CDA_fuseS = 0.002
 
     # calculate CDfuse from given variables
-    CDA0   = np.nan
+    # CDA0   = np.nan
     CDfuse = 1/S * (CDA_fuse0 + CDA_fuseS*S/SPV)
+
 
     return CDfuse
 

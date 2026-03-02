@@ -3,18 +3,18 @@ import numpy as np
 def GetCD(UEFC, opt_vars, AR, S):
 
     # HINT: we have functions for these in the UEFC calss
-
+    
     # Profile drag
-    CDp = np.nan
+    CDp = UEFC.profile_drag_coefficient(opt_vars, AR, S)
 
     # Induced drag coefficient
-    CDi = np.nan
+    CDi = UEFC.induced_drag_coefficient(opt_vars, AR, S)
 
     # Fuselage drag model
-    CDfuse = np.nan
+    CDfuse = UEFC.fuse_drag_coefficient(opt_vars, AR, S)
 
     # Payload drag coefficient increment
-    CDpay = np.nan
+    CDpay = UEFC.payload_drag_coefficient(opt_vars, AR, S)
 
     # Total drag coefficient
     CD = CDfuse + CDp + CDi + CDpay
