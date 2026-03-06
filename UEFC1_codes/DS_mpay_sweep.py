@@ -112,7 +112,7 @@ def mpay_sweep(ax, k, aircraft: UEFC,
         ax[2,1].set_xlabel(f"Payload mass $m_{{\\mathrm{{pay}}}}$ [g]")
         ax[2,1].set_ylabel(f"Load factor [-]")
         # plt.title(f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = {aircraft.tau:.2f}$, $(\\delta/b)_{{\\mathrm{{max}}}} = 0.06, 0.08, 0.10$")
-        suptitle = f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = {aircraft.tau:.2f}$, $(\\delta/b)_{{\\mathrm{{max}}}} = $0.06, 0.08, 0.10"
+        suptitle = f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = 0.10, 0.11, 0.12$, $(\\delta/b)_{{\\mathrm{{max}}}} = $0.06"
         fig.suptitle(suptitle)
         # plt.show()
     return ax, mpayout_array, obj_array, CL_array, CD_array, T_req_array, T_max_array, db_array, N_array
@@ -133,7 +133,7 @@ if __name__ == "__main__":
     AR = 9                 # Wing aspect ratio
     aircraft.taper    = 0.45  # taper ratio
     aircraft.dihedral = 10  # Wing dihedral (degrees)
-    aircraft.tau      = 0.10  # thickness-to-chord ratio
+    # aircraft.tau      = 0.10  # thickness-to-chord ratio
 
     # Tail parameters
     aircraft.Sh = 0.04 # Wing area of horizontal tail (m^2)
@@ -147,13 +147,14 @@ if __name__ == "__main__":
     aircraft.e0    = 1.0  # Span efficiency for straight level flight
 
     # Wing bending and material properties
-    # aircraft.dbmax   = [0.06, 0.08, 0.1]  # tip displacement bending constraint
+    aircraft.dbmax   = 0.06  # tip displacement bending constraint
     aircraft.rhofoam = 32.     # kg/m^3. high load foam
     aircraft.Efoam   = 19.3E6  # Pa.     high load foam
 
     for i in [0, 1, 2]:
         k = i
-        aircraft.dbmax = [0.06, 0.08, 0.1][i]
+        aircraft.tau = [0.10, 0.11, 0.12][i]
+        print(f"################ START OF TAU = {aircraft.tau} ################")
         ax, mpay, obj, CL, CD, T_req, T_max, db, N = mpay_sweep(ax, k, aircraft,
                                                         AR, S,
                                                         mpay_start=mpay_start,
