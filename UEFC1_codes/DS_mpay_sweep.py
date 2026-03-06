@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 plt.style.use(os.path.join(os.path.dirname(__file__), "uefc.mplstyle"))
 
-fig, ax = plt.subplots(3, 2, figsize=(9, 9))
+fig, ax = plt.subplots(3, 2, figsize=(15, 11))
 
 # You should not need to change the values within this function
 def mpay_sweep(ax, k, aircraft: UEFC,
@@ -23,7 +23,7 @@ def mpay_sweep(ax, k, aircraft: UEFC,
         mpay_array = np.array([mpay_start])
     else:
         mpay_array = np.linspace(mpay_start, mpay_end, mpay_num)
-
+    colors = ["#8400FF", "#00A2FF", "#000000FF", "#FF25FF", "#0BD6AA", "#298300"]
     obj_array = []
     mpayout_array = []
     CL_array = []
@@ -72,47 +72,48 @@ def mpay_sweep(ax, k, aircraft: UEFC,
         #label_base = '$(\\delta/b)_{{\\mathrm{max}}}'
 
         # Objective function: velocity
-        ax[0,0].plot(mpayout_array, obj_array, marker=markers[k], color=tab10_colors[k])
+        ax[0,0].plot(mpayout_array, obj_array, marker=markers[k], color=colors[k])
         ax[0,0].grid(True)
         #ax[0,0].set_xlabel(f"Payload mass $m_{{\\mathrm{{pay}}}}$ [g]")
         ax[0,0].set_ylabel(f"Velocity $V$ [m/s]")
 
         # Wing tip deflection
-        ax[0,1].plot(mpayout_array, db_array, marker=markers[2+k], color=tab10_colors[2+k] )
+        ax[0,1].plot(mpayout_array, db_array, marker=markers[k], color=colors[k], label = f"dbmax = {aircraft.dbmax}")
+        ax[0,1].legend()
         # ax[0,1].axhline(y=aircraft.dbmax, color='r', linestyle='--')
         ax[0,1].grid(True)
         #ax[0,1].set_xlabel(f"Payload mass $m_{{\\mathrm{{pay}}}}$ [g]")
         ax[0,1].set_ylabel(f"Tip bending $\\delta/b$")
 
         # Lift coefficient
-        ax[1,0].plot(mpayout_array, CL_array, marker=markers[1+k], color=tab10_colors[1+k] )
+        ax[1,0].plot(mpayout_array, CL_array, marker=markers[k], color=colors[k])
         # ax[1,0].axhline(y=aircraft.CLdes, color='r', linestyle='--')
         ax[1,0].grid(True)
         #ax[1,0].set_xlabel(f"Payload mass $m_{{\\mathrm{{pay}}}}$ [g]")
         ax[1,0].set_ylabel(f"Lift coefficient $C_L$")
 
         # Drag coefficient
-        ax[1,1].plot(mpayout_array, CD_array, marker=markers[k], color=tab10_colors[4+k] )
+        ax[1,1].plot(mpayout_array, CD_array, marker=markers[k], color=colors[k] )
         ax[1,1].grid(True)
         #ax[1,1].set_xlabel(f"Payload mass $m_{{\\mathrm{{pay}}}}$ [g]")
         ax[1,1].set_ylabel(f"Drag coefficient $C_D$")
 
         # Thrust
-        ax[2,0].plot(mpayout_array, T_max_array, color=tab10_colors[2], marker=markers[2], label="Thrust Max", linestyle="solid")
-        ax[2,0].plot(mpayout_array, T_req_array, color=tab10_colors[3], marker=markers[3], label="Thrust Required", linestyle="dotted")
-        ax[2,0].legend()
+        ax[2,0].plot(mpayout_array, T_max_array, color=colors[k+3], marker="o", label=f"Thrust Max for dbmax={aircraft.dbmax}", linestyle="solid")
+        ax[2,0].plot(mpayout_array, T_req_array, color=colors[k], marker=markers[k], label=f"Thrust Required for dbmax={aircraft.dbmax}", linestyle="dotted")
+        ax[2,0].legend(fontsize = 6, alignment = "left")
         ax[2,0].grid(True)
         ax[2,0].set_xlabel(f"Payload mass $m_{{\\mathrm{{pay}}}}$ [g]")
         ax[2,0].set_ylabel(f"Thrust [N]")
 
         # Load Factor
-        ax[2,1].plot(mpayout_array, N_array, marker=markers[0], color=tab10_colors[0] )
+        ax[2,1].plot(mpayout_array, N_array, marker=markers[k], color=colors[k] )
         ax[2,1].grid(True)
         ax[2,1].set_xlabel(f"Payload mass $m_{{\\mathrm{{pay}}}}$ [g]")
         ax[2,1].set_ylabel(f"Load factor [-]")
-
-        # suptitle = f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = {aircraft.tau:.2f}$, $(\\delta/b)_{{\\mathrm{{max}}}} = {aircraft.dbmax:.2f}$"
-        # fig.suptitle(suptitle)
+        # plt.title(f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = {aircraft.tau:.2f}$, $(\\delta/b)_{{\\mathrm{{max}}}} = 0.06, 0.08, 0.10$")
+        suptitle = f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = {aircraft.tau:.2f}$, $(\\delta/b)_{{\\mathrm{{max}}}} = $0.06, 0.08, 0.10"
+        fig.suptitle(suptitle)
         # plt.show()
     return ax, mpayout_array, obj_array, CL_array, CD_array, T_req_array, T_max_array, db_array, N_array
 
