@@ -7,8 +7,10 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 plt.style.use(os.path.join(os.path.dirname(__file__), "uefc.mplstyle"))
 
+fig, ax = plt.subplots(3, 2, figsize=(9, 9))
+
 # You should not need to change the values within this function
-def mpay_sweep(aircraft: UEFC,
+def mpay_sweep(ax, k, aircraft: UEFC,
                AR: float = 9.0,
                S: float = 0.354, # m
                mpay_start: float = 0.0, # g
@@ -63,36 +65,34 @@ def mpay_sweep(aircraft: UEFC,
     # plotting
     if show_plot:
         # plotting
-        plt.close()
+        # plt.close()
         markers = ['x', '*', '.', '+', "^"]
         tab10_colors = cm.tab10.colors
         #colors = ["blue", "red", "green", "msgenta", "cyan"]
         #label_base = '$(\\delta/b)_{{\\mathrm{max}}}'
 
-        fig, ax = plt.subplots(3, 2, figsize=(9, 9))
-
         # Objective function: velocity
-        ax[0,0].plot(mpayout_array, obj_array, marker=markers[0], color=tab10_colors[0])
+        ax[0,0].plot(mpayout_array, obj_array, marker=markers[k], color=tab10_colors[k])
         ax[0,0].grid(True)
         #ax[0,0].set_xlabel(f"Payload mass $m_{{\\mathrm{{pay}}}}$ [g]")
         ax[0,0].set_ylabel(f"Velocity $V$ [m/s]")
 
         # Wing tip deflection
-        ax[0,1].plot(mpayout_array, db_array, marker=markers[4], color=tab10_colors[4] )
-        ax[0,1].axhline(y=aircraft.dbmax, color='r', linestyle='--')
+        ax[0,1].plot(mpayout_array, db_array, marker=markers[2+k], color=tab10_colors[2+k] )
+        # ax[0,1].axhline(y=aircraft.dbmax, color='r', linestyle='--')
         ax[0,1].grid(True)
         #ax[0,1].set_xlabel(f"Payload mass $m_{{\\mathrm{{pay}}}}$ [g]")
         ax[0,1].set_ylabel(f"Tip bending $\\delta/b$")
 
         # Lift coefficient
-        ax[1,0].plot(mpayout_array, CL_array, marker=markers[1], color=tab10_colors[1] )
-        ax[1,0].axhline(y=aircraft.CLdes, color='r', linestyle='--')
+        ax[1,0].plot(mpayout_array, CL_array, marker=markers[1+k], color=tab10_colors[1+k] )
+        # ax[1,0].axhline(y=aircraft.CLdes, color='r', linestyle='--')
         ax[1,0].grid(True)
         #ax[1,0].set_xlabel(f"Payload mass $m_{{\\mathrm{{pay}}}}$ [g]")
         ax[1,0].set_ylabel(f"Lift coefficient $C_L$")
 
         # Drag coefficient
-        ax[1,1].plot(mpayout_array, CD_array, marker=markers[1], color=tab10_colors[1] )
+        ax[1,1].plot(mpayout_array, CD_array, marker=markers[k], color=tab10_colors[4+k] )
         ax[1,1].grid(True)
         #ax[1,1].set_xlabel(f"Payload mass $m_{{\\mathrm{{pay}}}}$ [g]")
         ax[1,1].set_ylabel(f"Drag coefficient $C_D$")
@@ -111,10 +111,10 @@ def mpay_sweep(aircraft: UEFC,
         ax[2,1].set_xlabel(f"Payload mass $m_{{\\mathrm{{pay}}}}$ [g]")
         ax[2,1].set_ylabel(f"Load factor [-]")
 
-        suptitle = f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = {aircraft.tau:.2f}$, $(\\delta/b)_{{\\mathrm{{max}}}} = {aircraft.dbmax:.2f}$"
-        fig.suptitle(suptitle)
-        plt.show()
-    return mpayout_array, obj_array, CL_array, CD_array, T_req_array, T_max_array, db_array, N_array
+        # suptitle = f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = {aircraft.tau:.2f}$, $(\\delta/b)_{{\\mathrm{{max}}}} = {aircraft.dbmax:.2f}$"
+        # fig.suptitle(suptitle)
+        # plt.show()
+    return ax, mpayout_array, obj_array, CL_array, CD_array, T_req_array, T_max_array, db_array, N_array
 
 if __name__ == "__main__":
 
@@ -146,14 +146,17 @@ if __name__ == "__main__":
     aircraft.e0    = 1.0  # Span efficiency for straight level flight
 
     # Wing bending and material properties
-    aircraft.dbmax   = 0.06  # tip displacement bending constraint
+    # aircraft.dbmax   = [0.06, 0.08, 0.1]  # tip displacement bending constraint
     aircraft.rhofoam = 32.     # kg/m^3. high load foam
     aircraft.Efoam   = 19.3E6  # Pa.     high load foam
 
-
-    mpay, obj, CL, CD, T_req, T_max, db, N = mpay_sweep(aircraft,
+    for i in [0, 1, 2]:
+        k = i
+        aircraft.dbmax = [0.06, 0.08, 0.1][i]
+        ax, mpay, obj, CL, CD, T_req, T_max, db, N = mpay_sweep(ax, k, aircraft,
                                                         AR, S,
                                                         mpay_start=mpay_start,
                                                         mpay_end=mpay_end,
                                                         mpay_num=mpay_num,
                                                         show_plot=True)
+plt.show()
