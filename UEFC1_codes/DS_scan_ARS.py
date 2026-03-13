@@ -164,8 +164,7 @@ if __name__ == "__main__":
     aircraft = UEFC()
 
     # Payload weight
-    aircraft.mpay_g   = np.nan     # payload weight in grams
-    # TODO: determine the payload from DS2.1
+    aircraft.mpay_g   = 300    # payload weight in grams
 
     # Geometry parameters
     S  = np.nan                  # Wing area (m^2)
@@ -193,10 +192,10 @@ if __name__ == "__main__":
     num_division = 41
 
     # parameters for DS.3
-    AR_start = 0.0
-    AR_end = 1.0
-    S_start = 0.0
-    S_end = 1.0
+    AR_start = 1.0
+    AR_end = 15.0
+    S_start = 0.1
+    S_end = 2.0
     # these are guesses, we should probably change them ^
 
     scan_ARS(aircraft, AR_start, AR_end, S_start, S_end, num_division, show_plots=True)
