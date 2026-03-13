@@ -95,7 +95,7 @@ def scan_ARS(aircraft: UEFC,
         # get_ipython().run_line_magic('matplotlib', 'qt')
         marker=(8,2,0)  # 8-sided asterisk
 
-        fig, ax = plt.subplots(3, 2, figsize=(9, 9)) #, dpi=150
+        fig, ax = plt.subplots(3, 2, figsize=(8, 8)) #, dpi=150
 
         # Helper function for consistent contour plots
         def contourf(ax,vals,levels):
@@ -169,9 +169,9 @@ if __name__ == "__main__":
     # Geometry parameters
     S  = np.nan                  # Wing area (m^2)
     AR = np.nan                  # Wing aspect ratio
-    aircraft.taper    = 0.7   # taper ratio
+    aircraft.taper    = 1.0   # taper ratio
     aircraft.dihedral = 10   # Wing dihedral (degrees)
-    aircraft.tau      = 0.10  # thickness-to-chord ratio
+    aircraft.tau      = 0.08  # thickness-to-chord ratio
 
     # Tail parameters
     aircraft.Sh = 0.04 # Wing area of horizontal tail (m^2)
@@ -196,6 +196,5 @@ if __name__ == "__main__":
     AR_end = 15.0
     S_start = 0.1
     S_end = 2.0
-    # these are guesses, we should probably change them ^
 
     scan_ARS(aircraft, AR_start, AR_end, S_start, S_end, num_division, show_plots=True)
