@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 plt.style.use(os.path.join(os.path.dirname(__file__), "uefc.mplstyle"))
 
-fig, ax = plt.subplots(3, 2, figsize=(15, 11))
+fig, ax = plt.subplots(3, 2, figsize=(15*0.75, 11*0.75))
 
 # You should not need to change the values within this function
 def mpay_sweep(ax, k, aircraft: UEFC,
@@ -78,7 +78,7 @@ def mpay_sweep(ax, k, aircraft: UEFC,
         ax[0,0].set_ylabel(f"Velocity $V$ [m/s]")
 
         # Wing tip deflection
-        ax[0,1].plot(mpayout_array, db_array, marker=markers[k], color=colors[k], label = f"dbmax = {aircraft.dbmax}")
+        ax[0,1].plot(mpayout_array, db_array, marker=markers[k], color=colors[k], label = f"tau = {aircraft.tau}")
         ax[0,1].legend()
         # ax[0,1].axhline(y=aircraft.dbmax, color='r', linestyle='--')
         ax[0,1].grid(True)
@@ -112,7 +112,8 @@ def mpay_sweep(ax, k, aircraft: UEFC,
         ax[2,1].set_xlabel(f"Payload mass $m_{{\\mathrm{{pay}}}}$ [g]")
         ax[2,1].set_ylabel(f"Load factor [-]")
         # plt.title(f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = {aircraft.tau:.2f}$, $(\\delta/b)_{{\\mathrm{{max}}}} = 0.06, 0.08, 0.10$")
-        suptitle = f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = 0.10, 0.11, 0.12$, $(\\delta/b)_{{\\mathrm{{max}}}} = $0.06"
+        # suptitle = f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = 0.10$, $(\\delta/b)_{{\\mathrm{{max}}}} = $0.06, 0.08, 0.10"
+        suptitle = f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = [0.10,0.11,0.12]$, $(\\delta/b)_{{\\mathrm{{max}}}} = $0.06"
         fig.suptitle(suptitle)
         # plt.show()
     return ax, mpayout_array, obj_array, CL_array, CD_array, T_req_array, T_max_array, db_array, N_array
@@ -154,6 +155,7 @@ if __name__ == "__main__":
     for i in [0, 1, 2]:
         k = i
         aircraft.tau = [0.10, 0.11, 0.12][i]
+        # aircraft.dbmax = [0.06,0.08,0.10][i]
         print(f"################ START OF TAU = {aircraft.tau} ################")
         ax, mpay, obj, CL, CD, T_req, T_max, db, N = mpay_sweep(ax, k, aircraft,
                                                         AR, S,
@@ -161,4 +163,11 @@ if __name__ == "__main__":
                                                         mpay_end=mpay_end,
                                                         mpay_num=mpay_num,
                                                         show_plot=True)
+        # print(f"################ START OF dbmax = {aircraft.dbmax} ################")
+        # ax, mpay, obj, CL, CD, T_req, T_max, db, N = mpay_sweep(ax, k, aircraft,
+        #                                                 AR, S,
+        #                                                 mpay_start=mpay_start,
+        #                                                 mpay_end=mpay_end,
+        #                                                 mpay_num=mpay_num,
+        #                                                 show_plot=True)
 plt.show()
