@@ -151,8 +151,8 @@ def scan_ARS(aircraft: UEFC,
         suptitle = f"$V_{{opt}} = {obj_opt:.2f}$ m/s, $AR_{{opt}} = {ARopt:.1f}$, $S_{{opt}} = {Sopt:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = {aircraft.tau:.2f}$, $(\\delta/b)_{{\\mathrm{{max}}}} = {aircraft.dbmax:.2f}$"
         fig.suptitle(suptitle)
 
-        if savefig is not None:
-            fig.savefig(savefig)
+        # if savefig is not None:
+        #     fig.savefig(savefig)
 
         plt.show()
 
@@ -164,14 +164,14 @@ if __name__ == "__main__":
     aircraft = UEFC()
 
     # Payload weight
-    aircraft.mpay_g   = 300    # payload weight in grams
+    aircraft.mpay_g   = 250    # payload weight in grams
 
-    # Geometry parameters
+    # Geometry parameters (PLANE VANILLA)
     S  = np.nan                  # Wing area (m^2)
     AR = np.nan                  # Wing aspect ratio
-    aircraft.taper    = 1.0   # taper ratio
+    aircraft.taper    = 0.50   # taper ratio
     aircraft.dihedral = 10   # Wing dihedral (degrees)
-    aircraft.tau      = 0.08  # thickness-to-chord ratio
+    aircraft.tau      = 0.12  # thickness-to-chord ratio
 
     # Tail parameters
     aircraft.Sh = 0.04 # Wing area of horizontal tail (m^2)
@@ -185,7 +185,7 @@ if __name__ == "__main__":
     aircraft.e0    = 1.0  # Span efficiency for straight level flight
 
     # Wing bending and material properties
-    aircraft.dbmax    = 0.08  # tip displacement bending constraint
+    aircraft.dbmax    = 0.10  # tip displacement bending constraint
     aircraft.rhofoam  = 32.     # kg/m^3. high load foam
     aircraft.Efoam    = 19.3E6  # Pa.     high load foam
 

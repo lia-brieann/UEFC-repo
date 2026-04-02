@@ -26,6 +26,7 @@ PV.plotgeom()
 # Solve the flow around the wing at a desired CL
 G, alpha = PV.solve(CL=0.65) # The solution is returned in G and the required angle of attack in alpha
 # G, alpha = PV.solve(alpha=3.0) # If you wanted to solve at a desired angle of attack (in degrees)
+# more rigorously determining the CL design constraint ^^
 
 # Get the aspect ratio and surface area
 AR = PV.get_AR()
