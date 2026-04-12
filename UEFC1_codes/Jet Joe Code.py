@@ -11,20 +11,20 @@ from scipy.optimize import fsolve
 r_outer = 55.24/2*10**(-3)      # [m]
 r_inner = 37.2/2*10**(-3)      # [m]
 A = math.pi*(r_outer**2-r_inner**2)/12        # [m^2]
-B1 = np.nan       # radians
-B2 = 65       # radians
-a1 = np.nan       # radians
+B1 = 30 * (math.pi/180)       # radians - Need to find this, just a placeholder
+B2 = 65 * (math.pi/180)      # radians
+a1 = 20 * (math.pi/180)      # radians - Need to find this, just a placeholder
 a2 = 0       # radians
-RPM = 160000
-mdot_f = np.nan
-h = np.nan      # fuel heating value
-Tt5 = np.nan
-Tt6 = Tt5
+RPM = 160000.
+mdot_f = 0.00307119834  # [kg/s] from 6.5 oz/min * 60 s/min * 0.02834952 kg/oz
+h = 44.5 * 10**6      # fuel heating value [J/kg] - May need to find this, I just looked up the average hf for Jet-A
+Tt5 = 953.15    # [K]
+Tt6 = Tt5       # [K]
 Tt0 = 298.15    # [K]
-Tt1 = Tt0
-Tt2 = Tt0
+Tt1 = Tt0       # [K]
+Tt2 = Tt0       # [K]
 # cps and gammas #
-R = 287         # J/(kgK)
+R = 287.         # J/(kgK)
 gi = 1.4        # i = inlet
 gc = 1.4        # c = combustor
 gb = 1.3        # b = burner
@@ -58,23 +58,20 @@ def equations(vars):
     eq1 = mdot_1*cpb*(Tt4 - Tt3) - mdot_f*h
     eq2 = mdot_1*cpc*(Tt2 - Tt3) - (mdot_1 + mdot_f)*cpt*(Tt5 - Tt4)
     return [eq1, eq2]
-solution  = fsolve(equations, [0, 0])
+solution  = fsolve(equations, [1, 1])
+# print(solution)
 mdot_1 = solution[0]
 Tt4 = solution[1]
 
 #### Step 5 - Determine Nozzle KE ####
 
 # Pressures in Pa #
-Patm = 101325
+Patm = 101325.
 Pt2 = Patm
 Pt3 = Pt2/pi
 Pt4 = Pt3
 P6 = Patm
-def equation(vars):
-    Pt5 = vars
-    eq1 = nt - (1-Tt5/Tt4)/(1-(Pt5/Pt4)**((gt-1)/gt))
-    return [eq1]
-Pt5 = fsolve(equation, 0)[0]
+Pt5 = Pt4*(1 - (1-Tt5/Tt4)/nt)**(gt/(gt-1))
 Pt6 = Pt5
 T6 = Tt6*(Pt6/Patm)**(-gn/(gn-1))
 c6 = math.sqrt(2*cpn*(Tt6-T6))
@@ -83,8 +80,8 @@ KE = .5*c6**2*(mdot_1+mdot_f)       # Check for correct mdot
 #### Step 6 - Find Specific Thrust, t, and SFC ####
 SFC = mdot_f/((mdot_1+mdot_f)*c6)
 T = mdot_f/SFC
-t = T/mdot_1/math.sqrt(R*gi*Tt0)        # Check if Tt0=Tinlet for speed of sound at inlet
-print(c6, T/(mdot_1+mdot_f))
+t = T/(mdot_1*math.sqrt(R*gi*Tt0))        # Check if Tt0=Tinlet for speed of sound at inlet
+# print(c6, T/(mdot_1+mdot_f))
 
 #### Step 7 - Find Turbine Mass Flow ####
 mdot_6 = mdot_1 + mdot_f
@@ -92,8 +89,10 @@ print(mdot_6, Pt4*A/(math.sqrt(R*Tt4))*math.sqrt(gn)*(1+(gn-1)/2)**((-gn-1)/(2*(
 # is g6 1.3 or 1.4?
 
 #### Print Statements ####
-print(f'Cycle pressure ratio (P2/P1) is {pi}.')
-print(f'Inlet mass flow (mdot_1) is {mdot_1} kg/s.')
-print(f'Turbine inlet temperature (T3) is {Tt3} K.')
-print(f'Specific thrust (t) is {t} N/kg.')
-print(f'Specific fuel consumption (SFC) is {SFC} kg/(sK).')
+print("####### Thermodynamic cycle and mean-line model results: #######")
+print(f'Cycle pressure ratio (P2/P1) is {pi:.2}.')
+print(f'Inlet mass flow (mdot_1) is {mdot_1:.4} kg/s.')
+print(f'Turbine inlet temperature (T3) is {Tt3:.4} K.')
+print(f'Specific thrust (t) is {t:.4}.')
+print(f'Specific fuel consumption (SFC) is {SFC:.2e} kg/(sK).')
+print(f'################################################################')
