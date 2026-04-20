@@ -1,5 +1,6 @@
 from GetUEFC import UEFC
 from UEFC_wing import UEFC_wing
+from vlm import vlm
 import numpy as np
 import os
 from DS_report_opt_obj import report_opt_obj
@@ -77,13 +78,14 @@ if __name__ == "__main__":
     wing.b        = wing_dimensions = aircraft.wing_dimensions(AR, S)["Span"]
     wing.croot    = wing_dimensions = aircraft.wing_dimensions(AR, S)["Root chord"]
     wing.ctip     = wing_dimensions = aircraft.wing_dimensions(AR, S)["Tip chord"]
-    wing.agroot   = np.nan
-    wing.agtip    = np.nan
+    wing.agroot   = np.nan #what is this?
+    wing.agtip    = np.nan #what is this?
     wing.dihedral = aircraft.dihedral
 
 
     print(f"AR = {wing.get_AR()}")
     print(f"S = {wing.get_S()}")
 
-
-    # TODO: also need to do wing simulation?
+    root_angle = wing.agroot
+    washout_diff = np.nan
+    vlm(root_angle,washout_diff)

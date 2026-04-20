@@ -11,14 +11,14 @@ Date: April 2, 2021
 import UEFC_wing
 import matplotlib.pyplot as plt
 
-def vlm(root_angle,washout_diff,tip_angle):
+def vlm(root_angle,washout_diff):
     # Set-up a wing object. Inputs: wingspan, root chord, tip chord, root incidence
     # angle, tip incidence angle, dihedral angle.
     # Note: wing twist is defined as (agroot - agtip). Therefore, this wing has a
     # twist of +5 degrees, and the tip is at a lower incidence angle than the root.
     # root_angle = 3.13
     # washout_diff = -5.0
-    # tip_angle = root_angle + washout_diff
+    tip_angle = root_angle + washout_diff
     PV = UEFC_wing.UEFC_wing(b=1.77, croot=0.27, ctip=0.12, agroot=root_angle, agtip=tip_angle, dihedral=10.)
 
     # Plot the wing geometry
