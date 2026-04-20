@@ -1,0 +1,89 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+#Part B
+
+
+aetrim = np.linspace(-10, 10, 1000)
+aerad = aetrim*(np.pi/180)
+c = 0.2
+lh = 0.65
+Vh = 0.367
+ARh = (0.525)**2/0.04
+ah = 2*np.pi/(1+2/ARh)
+aw = 5.14
+ae = 3.64
+alpha = -(aerad*Vh*(c/lh))/((aw/ae)+Vh*(c/lh)*(ah/ae))
+alphadeg = alpha * (180/np.pi)
+
+
+plt.plot(aetrim, alphadeg, label = "alpha")
+plt.title("Alpha in terms of alpha_e_trim")
+plt.ylabel("Alpha (Degrees)")
+plt.xlabel("Alpha_e_trim (Degrees)")
+plt.grid()
+plt.legend()
+plt.show()
+
+#Part C
+
+Clwnom = 0.65
+CLW = Clwnom+aw*alpha
+CLH = ah*alpha+ae*aerad
+
+
+plt.plot(aetrim, CLW, label = "C_LW")
+plt.plot(aetrim, CLH, label = "C_LH")
+plt.title("C_LH and C_LW in terms of alpha_e_trim")
+plt.ylabel("Magnitude")
+plt.xlabel("Alpha_e_trim (Degrees)")
+plt.grid()
+plt.legend()
+plt.show()
+
+
+#Part D
+
+CMWnom = -0.15
+x_cgoverc = (1/4*CLW+(1+1/4*c/lh)*Vh*CLH-CMWnom)/(CLW+Vh*CLH*c/lh)
+
+
+plt.plot(aetrim, x_cgoverc, label = "x_cg/c")
+plt.title("x_cg/c in terms of alpha_e_trim")
+plt.ylabel("Magnitude")
+plt.xlabel("Alpha_e_trim (Degrees)")
+plt.grid()
+plt.legend()
+plt.show()
+
+
+#SM8
+
+xpayoverc = (0.2*630*x_cgoverc*100-3352.8)/(250*0.2*100) #convert from cm to m before dividing by c you dumbass
+changex_cg = x_cgoverc - 0.481
+changex_payload = xpayoverc-0.54
+
+
+plt.plot(aetrim, changex_cg, label = "change in x_cg/c")
+plt.plot(aetrim, changex_payload, label = "change in x_pay/c")
+plt.title("Change in x_cg/c and x_pay/c in terms of alpha_e_trim")
+plt.ylabel("Magnitude")
+plt.xlabel("Alpha_e_trim (Degrees)")
+plt.grid()
+plt.legend()
+plt.show()
+
+
+#SM9
+xnpoverc = (aw/(4*ah)+Vh*(lh/c+1/4))/(aw/ah+Vh)
+print(xnpoverc)
+SM = xnpoverc - x_cgoverc
+
+plt.plot(aetrim, SM, label = "SM")
+plt.title("SM in terms of alpha_e_trim")
+plt.ylabel("Static Margin")
+plt.xlabel("Alpha_e_trim (Degrees)")
+plt.grid()
+plt.legend()
+plt.show()
