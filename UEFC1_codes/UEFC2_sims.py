@@ -73,19 +73,24 @@ if __name__ == "__main__":
     aircraft.mpay_g   = 250
     report_opt_obj(aircraft, AR, S)
 
+
+    print(f"root chord = {aircraft.wing_dimensions(AR, S)["Root chord"]}")
+    print(f"tip chord = {aircraft.wing_dimensions(AR, S)["Tip chord"]}")
+    print(f"span = {aircraft.wing_dimensions(AR, S)["Span"]}")
+
     # wing analysis
-    wing = UEFC_wing()
-    wing.b        = wing_dimensions = aircraft.wing_dimensions(AR, S)["Span"]
-    wing.croot    = wing_dimensions = aircraft.wing_dimensions(AR, S)["Root chord"]
-    wing.ctip     = wing_dimensions = aircraft.wing_dimensions(AR, S)["Tip chord"]
-    wing.agroot   = np.nan #what is this?
-    wing.agtip    = np.nan #what is this?
-    wing.dihedral = aircraft.dihedral
+    b        = aircraft.wing_dimensions(AR, S)["Span"]
+    croot    = aircraft.wing_dimensions(AR, S)["Root chord"]
+    ctip     = aircraft.wing_dimensions(AR, S)["Tip chord"]
+    agroot   = 3.0; root_angle = agroot
+    washout_diff = -5.0
+    agtip    = root_angle  + washout_diff
+    dihedral = aircraft.dihedral
+    wing = UEFC_wing(b, croot, ctip, agroot, agtip, dihedral)
 
-
-    print(f"AR = {wing.get_AR()}")
-    print(f"S = {wing.get_S()}")
-
-    root_angle = wing.agroot
-    washout_diff = np.nan
     vlm(root_angle,washout_diff)
+
+    print("\n##### vlm Output #####\n")
+    print(f"AR = {wing.get_AR()} vs. ARopt = {ARopt}")
+    print(f"S = {wing.get_S()} vs. Sopt = {Sopt}")
+    print("\n#############################\n")

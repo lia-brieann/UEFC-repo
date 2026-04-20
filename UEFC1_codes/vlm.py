@@ -11,7 +11,7 @@ Date: April 2, 2021
 import UEFC_wing
 import matplotlib.pyplot as plt
 
-def vlm(root_angle,washout_diff):
+def vlm(root_angle = 3.13,washout_diff = -5.0):
     # Set-up a wing object. Inputs: wingspan, root chord, tip chord, root incidence
     # angle, tip incidence angle, dihedral angle.
     # Note: wing twist is defined as (agroot - agtip). Therefore, this wing has a
