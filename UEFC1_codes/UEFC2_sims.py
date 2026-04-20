@@ -1,4 +1,5 @@
 from GetUEFC import UEFC
+from UEFC_wing import UEFC_wing
 import numpy as np
 import os
 from DS_report_opt_obj import report_opt_obj
@@ -18,8 +19,6 @@ if __name__ == "__main__":
 
     # design parameters
     aircraft.mpay_g   = 250    # payload weight in grams
-    S  = np.nan                  # Wing area (m^2)
-    AR = np.nan                  # Wing aspect ratio
     aircraft.taper    = 0.50   # taper ratio
     aircraft.dihedral = 10   # Wing dihedral (degrees)
     aircraft.tau      = 0.12  # thickness-to-chord ratio
@@ -28,13 +27,63 @@ if __name__ == "__main__":
     aircraft.l_AR = 1.63 # Fuselage length to wingspan ratio (-)
     aircraft.CLdes = 0.75  # maximum CL wing will be designed to fly at (in cruise)
     aircraft.e0    = 1.0  # Span efficiency for straight level flight
-    aircraft.dbmax    = 0.10  # tip displacement bending constraint
+    aircraft.dbmax    = 0.10  # tip displacement bending constraint (<= 0.1)
     aircraft.rhofoam  = 32.     # kg/m^3. high load foam
     aircraft.Efoam    = 19.3E6  # Pa.     high load foam
     num_division = 41
 
-    # run necessary simulations
-    mpay_sweep()
-    scan_ARS()
-    report_opt_obj()
+    Vh = 0.40 # >= 0.3
+    Vv = 0.03 # >= 0.02
+    B = 6 # >= 5
+
+
+    # scan_ARS
+    AR_start = 1.0
+    AR_end = 15.0
+    S_start = 0.1
+    S_end = 2.0
+    obj_opt, ARopt, Sopt = scan_ARS(aircraft, AR_start, AR_end, S_start, S_end, num_division, show_plots=True)
+    # print("\n##### scan_ARS Output #####")
+    # print(f"ARopt = {ARopt}\Sopt = {Sopt}\obj_opt = {obj_opt}")
+    # print("#############################\n")
+
+    S  = Sopt                # Wing area (m^2)
+    AR = ARopt               # Wing aspect ratio
+
+    # mpay_sweep
+    mpay_start = 200  # g
+    mpay_end   = 300  # g
+    mpay_num   = 101
+    fig, ax = plt.subplots(3, 2, figsize=(15*0.75, 11*0.75))
+    ax, mpay, obj, CL, CD, T_req, T_max, db, N = mpay_sweep(ax, 1, aircraft,
+                                                        AR, S,
+                                                        mpay_start=mpay_start,
+                                                        mpay_end=mpay_end,
+                                                        mpay_num=mpay_num,
+                                                        show_plot=True)
+    print("\n##### mpay_sweep Output #####\n")
+    print(f"mpay = {mpay[50]}\nCL = {CL[50]}\nCD = {CD[50]}\nT_req = {T_req[50]}\nT_max = {T_max[50]}\ndb = {db[50]}\nN = {N[50]}")
+    print("\n#############################\n")
+    suptitle = f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = {aircraft.tau}$, $(\\delta/b)_{{\\mathrm{{max}}}} = {aircraft.dbmax}$"
+    fig.suptitle(suptitle)
+    plt.show()
+
+    # report_opt_obj
+    aircraft.mpay_g   = 250
+    report_opt_obj(aircraft, AR, S)
+
+    # wing analysis
+    wing = UEFC_wing()
+    wing.b        = wing_dimensions = aircraft.wing_dimensions(AR, S)["Span"]
+    wing.croot    = wing_dimensions = aircraft.wing_dimensions(AR, S)["Root chord"]
+    wing.ctip     = wing_dimensions = aircraft.wing_dimensions(AR, S)["Tip chord"]
+    wing.agroot   = np.nan
+    wing.agtip    = np.nan
+    wing.dihedral = aircraft.dihedral
+
+
+    print(f"AR = {wing.get_AR()}")
+    print(f"S = {wing.get_S()}")
+
+
     # TODO: also need to do wing simulation?

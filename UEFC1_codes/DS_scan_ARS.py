@@ -70,8 +70,8 @@ def scan_ARS(aircraft: UEFC,
                 dbvals[iAR,iS]    = aircraft.wing_tip_deflection(opt_vars, AR, S)
                 Nvals[iAR,iS]     = opt_vars[0]
 
-        if show_plots:
-            print("Completed %3.1f%% of (AR,S) scan" % (100*(iAR+1)/nAR))
+        # if show_plots:
+        #     print("Completed %3.1f%% of (AR,S) scan" % (100*(iAR+1)/nAR))
 
     # Find and print the optimal point (where objective is maximized)
     obj_opt           = np.max(objvals)

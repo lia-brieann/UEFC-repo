@@ -11,44 +11,45 @@ Date: April 2, 2021
 import UEFC_wing
 import matplotlib.pyplot as plt
 
-# Set-up a wing object. Inputs: wingspan, root chord, tip chord, root incidence
-# angle, tip incidence angle, dihedral angle.
-# Note: wing twist is defined as (agroot - agtip). Therefore, this wing has a
-# twist of +5 degrees, and the tip is at a lower incidence angle than the root.
-root_angle = 3.13
-washout_diff = -5.0
-tip_angle = root_angle + washout_diff
-PV = UEFC_wing.UEFC_wing(b=1.77, croot=0.27, ctip=0.12, agroot=root_angle, agtip=tip_angle, dihedral=10.)
+def vlm(root_angle,washout_diff,tip_angle):
+    # Set-up a wing object. Inputs: wingspan, root chord, tip chord, root incidence
+    # angle, tip incidence angle, dihedral angle.
+    # Note: wing twist is defined as (agroot - agtip). Therefore, this wing has a
+    # twist of +5 degrees, and the tip is at a lower incidence angle than the root.
+    # root_angle = 3.13
+    # washout_diff = -5.0
+    # tip_angle = root_angle + washout_diff
+    PV = UEFC_wing.UEFC_wing(b=1.77, croot=0.27, ctip=0.12, agroot=root_angle, agtip=tip_angle, dihedral=10.)
 
-# Plot the wing geometry
-PV.plotgeom()
+    # Plot the wing geometry
+    PV.plotgeom()
 
-# Solve the flow around the wing at a desired CL
-G, alpha = PV.solve(CL=0.65) # The solution is returned in G and the required angle of attack in alpha
-# G, alpha = PV.solve(alpha=3.0) # If you wanted to solve at a desired angle of attack (in degrees)
-# more rigorously determining the CL design constraint ^^
+    # Solve the flow around the wing at a desired CL
+    G, alpha = PV.solve(CL=0.65) # The solution is returned in G and the required angle of attack in alpha
+    # G, alpha = PV.solve(alpha=3.0) # If you wanted to solve at a desired angle of attack (in degrees)
+    # more rigorously determining the CL design constraint ^^
 
-# Get the aspect ratio and surface area
-AR = PV.get_AR()
-S  = PV.get_S()
+    # Get the aspect ratio and surface area
+    AR = PV.get_AR()
+    S  = PV.get_S()
 
-print('AR = {:.2f}'.format(AR))
-print('S  = {:.3f}'.format(S))
-print()
+    print('AR = {:.2f}'.format(AR))
+    print('S  = {:.3f}'.format(S))
+    print()
 
-# Get the cl vs. y (2D lift coefficient vs. wing span location) distribution
-cl, y = PV.calccldist(G)
+    # Get the cl vs. y (2D lift coefficient vs. wing span location) distribution
+    cl, y = PV.calccldist(G)
 
-# Plot the cl distribution (needed to determine stall behavior)
-PV.plotcl(G, plotclccbar=False)
+    # Plot the cl distribution (needed to determine stall behavior)
+    PV.plotcl(G, plotclccbar=False)
 
-# # Calculate key aerodynamic performance parameters using solution
-CL, CDi, e0, clmax= PV.calc_aeroperf(G)
+    # # Calculate key aerodynamic performance parameters using solution
+    CL, CDi, e0, clmax= PV.calc_aeroperf(G)
 
-print('alpha  = {:.2f} deg'.format(alpha))   # Angle of attack
-print('CL     = {:.2f}'.format(CL))          # 3D lift coefficient
-print('clmax  = {:.2f}'.format(clmax))       # Maximum 2D lift coefficient
-print('CDi    = {:.4f}'.format(CDi))         # Induced drag coefficient
-print('e0     = {:.2f}'.format(e0))          # Span efficiency in level flight
+    print('alpha  = {:.2f} deg'.format(alpha))   # Angle of attack
+    print('CL     = {:.2f}'.format(CL))          # 3D lift coefficient
+    print('clmax  = {:.2f}'.format(clmax))       # Maximum 2D lift coefficient
+    print('CDi    = {:.4f}'.format(CDi))         # Induced drag coefficient
+    print('e0     = {:.2f}'.format(e0))          # Span efficiency in level flight
 
-plt.show()
+    plt.show()

@@ -113,7 +113,8 @@ def mpay_sweep(ax, k, aircraft: UEFC,
         ax[2,1].set_ylabel(f"Load factor [-]")
         # plt.title(f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = {aircraft.tau:.2f}$, $(\\delta/b)_{{\\mathrm{{max}}}} = 0.06, 0.08, 0.10$")
         # suptitle = f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = 0.10$, $(\\delta/b)_{{\\mathrm{{max}}}} = $0.06, 0.08, 0.10"
-        suptitle = f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = [0.10,0.11,0.12]$, $(\\delta/b)_{{\\mathrm{{max}}}} = $0.06"
+        # suptitle = f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = [0.10,0.11,0.12]$, $(\\delta/b)_{{\\mathrm{{max}}}} = $0.06"
+        suptitle = f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = {aircraft.tau}$, $(\\delta/b)_{{\\mathrm{{max}}}} = {aircraft.dbmax}$"
         fig.suptitle(suptitle)
         # plt.show()
     return ax, mpayout_array, obj_array, CL_array, CD_array, T_req_array, T_max_array, db_array, N_array
@@ -170,4 +171,4 @@ if __name__ == "__main__":
         #                                                 mpay_end=mpay_end,
         #                                                 mpay_num=mpay_num,
         #                                                 show_plot=True)
-plt.show()
+# plt.show()
