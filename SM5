@@ -76,7 +76,7 @@ plt.show()
 
 
 #SM9
-xnpoverc = (aw/(4*ah)+Vh*(lh/c+1/4))/(aw/ah+Vh)
+xnpoverc = ((0.25 * aw/ah) + (Vh*(1 + 0.25*(c/lh))))/ ((aw/ah) + ((c/lh)*Vh))
 print(xnpoverc)
 SM = xnpoverc - x_cgoverc
 
