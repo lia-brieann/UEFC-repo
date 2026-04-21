@@ -2,88 +2,69 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-#Part B
-
-
-aetrim = np.linspace(-10, 10, 1000)
-aerad = aetrim*(np.pi/180)
+#parameters
 c = 0.2
 lh = 0.65
+Sh = 0.04
+S = 0.354
 Vh = 0.367
+AR = 9
 ARh = (0.525)**2/0.04
-ah = 2*np.pi/(1+2/ARh)
-aw = 5.14
-ae = 3.64
-alpha = -(aerad*Vh*(c/lh))/((aw/ae)+Vh*(c/lh)*(ah/ae))
-alphadeg = alpha * (180/np.pi)
-
-
-plt.plot(aetrim, alphadeg, label = "alpha")
-plt.title("Alpha in terms of alpha_e_trim")
-plt.ylabel("Alpha (Degrees)")
-plt.xlabel("Alpha_e_trim (Degrees)")
-plt.grid()
-plt.legend()
-plt.show()
-
-#Part C
-
-Clwnom = 0.65
-CLW = Clwnom+aw*alpha
-CLH = ah*alpha+ae*aerad
-
-
-plt.plot(aetrim, CLW, label = "C_LW")
-plt.plot(aetrim, CLH, label = "C_LH")
-plt.title("C_LH and C_LW in terms of alpha_e_trim")
-plt.ylabel("Magnitude")
-plt.xlabel("Alpha_e_trim (Degrees)")
-plt.grid()
-plt.legend()
-plt.show()
-
-
-#Part D
-
+fe = 0.6
+Clwnom = 0.75
 CMWnom = -0.15
-x_cgoverc = (1/4*CLW+(1+1/4*c/lh)*Vh*CLH-CMWnom)/(CLW+Vh*CLH*c/lh)
 
+def staticmargin(c, lh, S, Sh, AR, ARh, fe, Clwnom):
+    #calculating additional parameters
+    Vh = Sh*lh/(S*c)
+    ah = 2*np.pi/(1+2/ARh)
+    aw = 2*np.pi/(1+2/AR)
+    zetae = np.arccos(1-2*fe)
+    ae = 2*(np.pi-zetae+np.sin(zetae))
 
-plt.plot(aetrim, x_cgoverc, label = "x_cg/c")
-plt.title("x_cg/c in terms of alpha_e_trim")
-plt.ylabel("Magnitude")
-plt.xlabel("Alpha_e_trim (Degrees)")
-plt.grid()
-plt.legend()
-plt.show()
+    #initalizing elevator trim
+    aetrim = np.linspace(-10, 10, 1000)
+    aerad = aetrim*(np.pi/180)
 
+    #find alpha and alpha in degrees
+    alpha = -(aerad*Vh*(c/lh))/((aw/ae)+Vh*(c/lh)*(ah/ae))
+    alphadeg = alpha * (180/np.pi)
 
-#SM8
+    CLW = Clwnom+aw*alpha
+    CLH = ah*alpha+ae*aerad
 
-xpayoverc = (0.2*630*x_cgoverc*100-3352.8)/(250*0.2*100) #convert from cm to m before dividing by c you dumbass
-changex_cg = x_cgoverc - 0.481
-changex_payload = xpayoverc-0.54
+    #finding x_cg/c
+    x_cgoverc = (1/4*CLW+(1+1/4*c/lh)*Vh*CLH-CMWnom)/(CLW+Vh*CLH*c/lh)
 
+    #finding static margin
+    xnpoverc = ((0.25 * aw/ah) + (Vh*(1 + 0.25*(c/lh))))/ ((aw/ah) + ((c/lh)*Vh))
+    SM = xnpoverc - x_cgoverc
 
-plt.plot(aetrim, changex_cg, label = "change in x_cg/c")
-plt.plot(aetrim, changex_payload, label = "change in x_pay/c")
-plt.title("Change in x_cg/c and x_pay/c in terms of alpha_e_trim")
-plt.ylabel("Magnitude")
-plt.xlabel("Alpha_e_trim (Degrees)")
-plt.grid()
-plt.legend()
-plt.show()
+    return x_cgoverc, SM
 
+def change_in_cm(c, lh, S, Sh, AR, ARh, fe, Clwnom):
+    #this function is not finished because it doesn't account for the changing masses yet
 
-#SM9
-xnpoverc = ((0.25 * aw/ah) + (Vh*(1 + 0.25*(c/lh))))/ ((aw/ah) + ((c/lh)*Vh))
-print(xnpoverc)
-SM = xnpoverc - x_cgoverc
+    Vh = Sh*lh/(S*c)
+    ah = 2*np.pi/(1+2/ARh)
+    aw = 2*np.pi/(1+2/AR)
+    zetae = np.arccos(1-2*fe)
+    ae = 2*(np.pi-zetae+np.sin(zetae))
 
-plt.plot(aetrim, SM, label = "SM")
-plt.title("SM in terms of alpha_e_trim")
-plt.ylabel("Static Margin")
-plt.xlabel("Alpha_e_trim (Degrees)")
-plt.grid()
-plt.legend()
-plt.show()
+    aetrim = np.linspace(-10, 10, 1000)
+    aerad = aetrim*(np.pi/180)
+
+    #find alpha and alpha in degrees
+    alpha = -(aerad*Vh*(c/lh))/((aw/ae)+Vh*(c/lh)*(ah/ae))
+    alphadeg = alpha * (180/np.pi)
+
+    CLW = Clwnom+aw*alpha
+    CLH = ah*alpha+ae*aerad
+
+    x_cgoverc = (1/4*CLW+(1+1/4*c/lh)*Vh*CLH-CMWnom)/(CLW+Vh*CLH*c/lh)
+
+    xpayoverc = (0.2*630*x_cgoverc*100-3352.8)/(250*0.2*100) #convert from cm to m before dividing by c you dumbass
+    changex_cg = x_cgoverc - 0.481
+    changex_payload = xpayoverc-0.54
+
+    return changex_cg, changex_payload
