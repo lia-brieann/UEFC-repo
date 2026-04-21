@@ -27,7 +27,7 @@ if __name__ == "__main__":
     aircraft.tau      = 0.12  # thickness-to-chord ratio
     aircraft.Sh = 0.04 # Wing area of horizontal tail (m^2)
     aircraft.Sv = 0.03 # Wing area of vertical tail (m^2)
-    aircraft.l_AR = 1.63 # Fuselage length to wingspan ratio (-)
+    aircraft.l_AR = 1.5 # Fuselage length to wingspan ratio (-)
     aircraft.CLdes = 0.75  # maximum CL wing will be designed to fly at (in cruise)
     aircraft.e0    = 1.0  # Span efficiency for straight level flight
     aircraft.dbmax    = 0.10  # tip displacement bending constraint (<= 0.1)
@@ -37,10 +37,10 @@ if __name__ == "__main__":
 
     ##### PART 1 SIMS #####
     # scan_ARS
-    AR_start = 1.0
+    AR_start = 5.0
     AR_end = 15.0
     S_start = 0.1
-    S_end = 2.0
+    S_end = 1.5
     num_division = 41
     obj_opt, ARopt, Sopt = scan_ARS(aircraft, AR_start, AR_end, S_start, S_end, num_division, show_plots=True)
 
@@ -73,39 +73,41 @@ if __name__ == "__main__":
 
 
     ##### STATIC MARGIN #####
-    c = aircraft.wing_dimensions(AR, S)["Mean chord"]
-    # Vh = 0.40 # >= 0.3
-    # Vv = 0.03 # >= 0.02
+    # c = aircraft.wing_dimensions(AR, S)["Mean chord"]
+    # b = aircraft.wing_dimensions(AR, S)["Span"]
+    # # Vh = 0.40 # >= 0.3
+    # # Vv = 0.03 # >= 0.02
 
-    lv = 0.50
-    lh = 0.65
-    bh = 0.525
+    # lv = 0.30
+    # lh = 0.40
+    # bh = 0.525
 
-    fe = 0.6
-    Clwnom = CL[50]
-    CMWnom = np.nan
+    # fe = 0.6
+    # Clwnom = CL[50]
+    # CMWnom = -0.16 # change this
 
-    x_cgoverc, SM = staticmargin(c, lh, bh, S, aircraft.Sh, aircraft.Sv, lv, AR, fe, Clwnom, CMWnom)
+    # x_cgoverc, SM = staticmargin(c, b, lh, bh, S, aircraft.Sh, aircraft.Sv, lv, AR, fe, Clwnom, CMWnom)
 
     #########################
 
 
     ##### WING ANALYSIS #####
-    # b        = aircraft.wing_dimensions(AR, S)["Span"]
-    # croot    = aircraft.wing_dimensions(AR, S)["Root chord"]
-    # ctip     = aircraft.wing_dimensions(AR, S)["Tip chord"]
-    # agroot   = 3.0; root_angle = agroot
-    # washout_diff = -5.0
-    # agtip    = root_angle  + washout_diff
-    # dihedral = aircraft.dihedral
-    # wing = UEFC_wing(b=b, croot=croot, ctip=ctip, agroot=agroot, agtip=agtip, dihedral=dihedral)
+    b        = aircraft.wing_dimensions(AR, S)["Span"]
+    croot    = aircraft.wing_dimensions(AR, S)["Root chord"]
+    ctip     = aircraft.wing_dimensions(AR, S)["Tip chord"]
+    agroot   = 3.0; root_angle = agroot
+    washout_diff = -5.0
+    agtip    = root_angle  + washout_diff
+    dihedral = aircraft.dihedral
+    wing = UEFC_wing(b=b, croot=croot, ctip=ctip, agroot=agroot, agtip=agtip, dihedral=dihedral)
 
-    # vlm(wing, root_angle, washout_diff)
+    vlm(wing, root_angle, washout_diff)
+    B = np.nan
 
-    # print("\n##### vlm Output #####\n")
-    # print(f"B = {B} (must be >= 5)")
-    # print(f"AR = {wing.get_AR()} vs. ARopt = {ARopt}")
-    # print(f"S = {wing.get_S()} vs. Sopt = {Sopt}")
-    # print(f"wing weight = {GetWingWeight(aircraft, AR, S)}")
-    # print("\n#############################\n")
+    print("\n##### vlm Output #####\n")
+    print(f"B = {B} (must be >= 5)")
+    print(f"AR = {wing.get_AR()} vs. ARopt = {ARopt}")
+    print(f"S = {wing.get_S()} vs. Sopt = {Sopt}")
+    print(f"wing weight = {GetWingWeight(aircraft, AR, S)}")
+    print("\n#############################\n")
     #########################

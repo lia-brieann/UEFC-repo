@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def staticmargin(c, lh, bh, S, Sh, Sv, lv, AR, fe, Clwnom, CMWnom):
+def staticmargin(c, b, lh, bh, S, Sh, Sv, lv, AR, fe, Clwnom, CMWnom):
     """
     c - chord of wings
     lh - length to the midpoint of the horizontal part of the tail
@@ -18,7 +18,7 @@ def staticmargin(c, lh, bh, S, Sh, Sv, lv, AR, fe, Clwnom, CMWnom):
 
     #calculating additional parameters
     Vh = Sh*lh/(S*c)
-    Vv = Sv*lv/(S*c)
+    Vv = Sv*lv/(S*b)
     ah = 2*np.pi/(1+2/ARh)
     aw = 2*np.pi/(1+2/AR)
     zetae = np.arccos(1-2*fe)
