@@ -48,7 +48,7 @@ def vlm(PV, CL, root_angle = 3.13,washout_diff = -5.0):
 
     print('alpha  = {:.2f} deg'.format(alpha))   # Angle of attack
     print('CL     = {:.2f}'.format(CL))          # 3D lift coefficient
-    print('clmax  = {:.2f}'.format(clmax))       # Maximum 2D lift coefficient
+    print('clmax  = {:.2f}'.format(clmax), "(must be <= 0.8)")       # Maximum 2D lift coefficient
     print('CDi    = {:.4f}'.format(CDi))         # Induced drag coefficient
     print('e0     = {:.2f}'.format(e0))          # Span efficiency in level flight
 
