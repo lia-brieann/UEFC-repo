@@ -1,6 +1,7 @@
 from GetUEFC import UEFC
 from UEFC_wing import UEFC_wing
 from GetWingWeight import GetWingWeight
+from cg_sim import staticmargin
 from vlm import vlm
 import numpy as np
 import os
@@ -19,10 +20,10 @@ if __name__ == "__main__":
 
     aircraft = UEFC()
 
-    # design parameters
+    # initital design parameters (UEW-12-040)
     aircraft.mpay_g   = 250    # payload weight in grams
     aircraft.taper    = 0.50   # taper ratio
-    aircraft.dihedral = 10   # Wing dihedral (degrees)
+    aircraft.dihedral = 12.97   # Wing dihedral (degrees)
     aircraft.tau      = 0.12  # thickness-to-chord ratio
     aircraft.Sh = 0.04 # Wing area of horizontal tail (m^2)
     aircraft.Sv = 0.03 # Wing area of vertical tail (m^2)
@@ -30,23 +31,18 @@ if __name__ == "__main__":
     aircraft.CLdes = 0.75  # maximum CL wing will be designed to fly at (in cruise)
     aircraft.e0    = 1.0  # Span efficiency for straight level flight
     aircraft.dbmax    = 0.10  # tip displacement bending constraint (<= 0.1)
-    aircraft.rhofoam  = 32.     # kg/m^3. high load foam
+    aircraft.rhofoam  = 25.2     # kg/m^3. high load foam
     aircraft.Efoam    = 19.3E6  # Pa.     high load foam
-    num_division = 41
 
-    Vh = 0.40 # >= 0.3
-    Vv = 0.03 # >= 0.02
-    B = 6 # >= 5
 
+    ##### PART 1 SIMS #####
     # scan_ARS
     AR_start = 1.0
     AR_end = 15.0
     S_start = 0.1
     S_end = 2.0
+    num_division = 41
     obj_opt, ARopt, Sopt = scan_ARS(aircraft, AR_start, AR_end, S_start, S_end, num_division, show_plots=True)
-    # print("\n##### scan_ARS Output #####")
-    # print(f"ARopt = {ARopt}\Sopt = {Sopt}\obj_opt = {obj_opt}")
-    # print("#############################\n")
 
     S  = Sopt                # Wing area (m^2)
     AR = ARopt               # Wing aspect ratio
@@ -73,26 +69,43 @@ if __name__ == "__main__":
     # report_opt_obj
     aircraft.mpay_g   = 250
     report_opt_obj(aircraft, AR, S)
+    #########################
 
 
-    print(f"\nroot chord = {aircraft.wing_dimensions(AR, S)["Root chord"]}")
-    print(f"tip chord = {aircraft.wing_dimensions(AR, S)["Tip chord"]}")
-    print(f"span = {aircraft.wing_dimensions(AR, S)["Span"]}\n")
+    ##### STATIC MARGIN #####
+    c = aircraft.wing_dimensions(AR, S)["Mean chord"]
+    # Vh = 0.40 # >= 0.3
+    # Vv = 0.03 # >= 0.02
 
-    # wing analysis
-    b        = aircraft.wing_dimensions(AR, S)["Span"]
-    croot    = aircraft.wing_dimensions(AR, S)["Root chord"]
-    ctip     = aircraft.wing_dimensions(AR, S)["Tip chord"]
-    agroot   = 3.0; root_angle = agroot
-    washout_diff = -5.0
-    agtip    = root_angle  + washout_diff
-    dihedral = aircraft.dihedral
-    wing = UEFC_wing(b=b, croot=croot, ctip=ctip, agroot=agroot, agtip=agtip, dihedral=dihedral)
+    lv = 0.50
+    lh = 0.65
+    bh = 0.525
 
-    vlm(wing, root_angle, washout_diff)
+    fe = 0.6
+    Clwnom = CL[50]
+    CMWnom = np.nan
 
-    print("\n##### vlm Output #####\n")
-    print(f"AR = {wing.get_AR()} vs. ARopt = {ARopt}")
-    print(f"S = {wing.get_S()} vs. Sopt = {Sopt}")
-    print(f"wing weight = {GetWingWeight(aircraft, AR, S)}")
-    print("\n#############################\n")
+    x_cgoverc, SM = staticmargin(c, lh, bh, S, aircraft.Sh, aircraft.Sv, lv, AR, fe, Clwnom, CMWnom)
+
+    #########################
+
+
+    ##### WING ANALYSIS #####
+    # b        = aircraft.wing_dimensions(AR, S)["Span"]
+    # croot    = aircraft.wing_dimensions(AR, S)["Root chord"]
+    # ctip     = aircraft.wing_dimensions(AR, S)["Tip chord"]
+    # agroot   = 3.0; root_angle = agroot
+    # washout_diff = -5.0
+    # agtip    = root_angle  + washout_diff
+    # dihedral = aircraft.dihedral
+    # wing = UEFC_wing(b=b, croot=croot, ctip=ctip, agroot=agroot, agtip=agtip, dihedral=dihedral)
+
+    # vlm(wing, root_angle, washout_diff)
+
+    # print("\n##### vlm Output #####\n")
+    # print(f"B = {B} (must be >= 5)")
+    # print(f"AR = {wing.get_AR()} vs. ARopt = {ARopt}")
+    # print(f"S = {wing.get_S()} vs. Sopt = {Sopt}")
+    # print(f"wing weight = {GetWingWeight(aircraft, AR, S)}")
+    # print("\n#############################\n")
+    #########################

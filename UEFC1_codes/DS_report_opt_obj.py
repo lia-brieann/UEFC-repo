@@ -88,6 +88,26 @@ def report_opt_obj(aircraft, AR, S):
         print("  Usually this is because the airplane could not fly while " +
               "meeting all constraints.\n")
 
+    # AR      = 8.700
+    # S       = 0.195 sq. m
+    # b       = 1.302 m
+    # cbar    = 0.150 m
+    # cr      = 0.200 m
+    # ct      = 0.100 m
+    # lambda  = 0.500
+    # tau     = 0.120
+    # eps     = 0.040
+
+    # Masses
+    # ----------------------------------------------
+
+    # W/g     =  651 g
+    # Wfuse/g =  323 g
+    # Wwing/g =   78 g
+    # Wpay/g  =  250 g
+
+    
+
     return
 
 
