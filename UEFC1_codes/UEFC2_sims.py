@@ -74,9 +74,9 @@ if __name__ == "__main__":
     report_opt_obj(aircraft, AR, S)
 
 
-    print(f"root chord = {aircraft.wing_dimensions(AR, S)["Root chord"]}")
+    print(f"\nroot chord = {aircraft.wing_dimensions(AR, S)["Root chord"]}")
     print(f"tip chord = {aircraft.wing_dimensions(AR, S)["Tip chord"]}")
-    print(f"span = {aircraft.wing_dimensions(AR, S)["Span"]}")
+    print(f"span = {aircraft.wing_dimensions(AR, S)["Span"]}\n")
 
     # wing analysis
     b        = aircraft.wing_dimensions(AR, S)["Span"]
@@ -86,9 +86,9 @@ if __name__ == "__main__":
     washout_diff = -5.0
     agtip    = root_angle  + washout_diff
     dihedral = aircraft.dihedral
-    wing = UEFC_wing(b, croot, ctip, agroot, agtip, dihedral)
+    wing = UEFC_wing(b=b, croot=croot, ctip=ctip, agroot=agroot, agtip=agtip, dihedral=dihedral)
 
-    vlm(root_angle,washout_diff)
+    vlm(wing, root_angle, washout_diff)
 
     print("\n##### vlm Output #####\n")
     print(f"AR = {wing.get_AR()} vs. ARopt = {ARopt}")
