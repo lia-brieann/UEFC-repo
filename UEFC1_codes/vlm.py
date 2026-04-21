@@ -18,8 +18,8 @@ def vlm(PV, root_angle = 3.13,washout_diff = -5.0):
     # twist of +5 degrees, and the tip is at a lower incidence angle than the root.
     # root_angle = 3.13
     # washout_diff = -5.0
-    tip_angle = root_angle + washout_diff
-    PV = UEFC_wing.UEFC_wing(b=1.77, croot=0.27, ctip=0.12, agroot=root_angle, agtip=tip_angle, dihedral=10.)
+    # tip_angle = root_angle + washout_diff
+    # PV = UEFC_wing.UEFC_wing(b=1.77, croot=0.27, ctip=0.12, agroot=root_angle, agtip=tip_angle, dihedral=10.)
 
     # Plot the wing geometry
     PV.plotgeom()

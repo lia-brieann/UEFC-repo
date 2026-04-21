@@ -1,5 +1,6 @@
 from GetUEFC import UEFC
 from UEFC_wing import UEFC_wing
+from GetWingWeight import GetWingWeight
 from vlm import vlm
 import numpy as np
 import os
@@ -37,7 +38,6 @@ if __name__ == "__main__":
     Vv = 0.03 # >= 0.02
     B = 6 # >= 5
 
-
     # scan_ARS
     AR_start = 1.0
     AR_end = 15.0
@@ -55,6 +55,7 @@ if __name__ == "__main__":
     mpay_start = 200  # g
     mpay_end   = 300  # g
     mpay_num   = 101
+
     fig, ax = plt.subplots(3, 2, figsize=(15*0.75, 11*0.75))
     ax, mpay, obj, CL, CD, T_req, T_max, db, N = mpay_sweep(ax, 1, aircraft,
                                                         AR, S,
@@ -93,4 +94,5 @@ if __name__ == "__main__":
     print("\n##### vlm Output #####\n")
     print(f"AR = {wing.get_AR()} vs. ARopt = {ARopt}")
     print(f"S = {wing.get_S()} vs. Sopt = {Sopt}")
+    print(f"wing weight = {GetWingWeight(aircraft, AR, S)}")
     print("\n#############################\n")
