@@ -68,3 +68,7 @@ def change_in_cm(c, lh, S, Sh, AR, ARh, fe, Clwnom):
     changex_payload = xpayoverc-0.54
 
     return changex_cg, changex_payload
+
+def weight(m_tot, m_wing, m_tail, m_nose, m_battery, m_servo, m_fuselage, m_housing, c, lh, l):
+    xovercgnom = (m_wing*0.25*c+1.5*c*m_servo+m_battery*0.5*c+lh*m_tail+(l-lh)*m_nose+l/2*m_fuselage+(l-1.5*c)*0.5*m_housing)/(c*(m_tot))
+    return xovercgnom
