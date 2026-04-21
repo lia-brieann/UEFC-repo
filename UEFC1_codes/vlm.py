@@ -11,7 +11,7 @@ Date: April 2, 2021
 import UEFC_wing
 import matplotlib.pyplot as plt
 
-def vlm(PV, root_angle = 3.13,washout_diff = -5.0):
+def vlm(PV, CL, root_angle = 3.13,washout_diff = -5.0):
     # Set-up a wing object. Inputs: wingspan, root chord, tip chord, root incidence
     # angle, tip incidence angle, dihedral angle.
     # Note: wing twist is defined as (agroot - agtip). Therefore, this wing has a
@@ -25,7 +25,7 @@ def vlm(PV, root_angle = 3.13,washout_diff = -5.0):
     PV.plotgeom()
 
     # Solve the flow around the wing at a desired CL
-    G, alpha = PV.solve(CL=0.65) # The solution is returned in G and the required angle of attack in alpha
+    G, alpha = PV.solve(CL) # The solution is returned in G and the required angle of attack in alpha
     # G, alpha = PV.solve(alpha=3.0) # If you wanted to solve at a desired angle of attack (in degrees)
     # more rigorously determining the CL design constraint ^^
 
