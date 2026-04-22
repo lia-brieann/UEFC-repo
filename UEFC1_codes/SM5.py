@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy as scipy
 
 
 #parameters
@@ -70,12 +71,11 @@ def weight(S, Sh, Sv, l, xcgoverc, c = 0.156):
 
         num = m_nose*(l_nose) + m_tail*(l+l_nose) + m_wing*0.25*c + m_rbwm*0.5*c + m_servo*1.5*c + m_fuselage*(0.5*l+l_nose) + m_prhw*((l+1.5*c)*0.5+l_nose)
 
-        xovercgnom = (num / (m_other*c) - xcgoverc[500])**2
+        xovercgnom = (num / (m_other*c) - xcgoverc[500])
         return xovercgnom
 
-    l_nose = scipy.optimize.minimize(xcg, -0.13)
+    l_nose = scipy.optimize.root(xcg, -.13).x[0]
 
     num = m_nose*(l_nose) + m_tail*(l+l_nose) + m_wing*0.25*c + m_rbwm*0.5*c + m_servo*1.5*c + m_fuselage*(0.5*l+l_nose) + m_prhw*((l+1.5*c)*0.5+l_nose)
-    xovercgnom = (num / (m_other*c) - xcgoverc[500])**2
-
+    xovercgnom = num / (m_other*c)
     return xovercgnom, m_other

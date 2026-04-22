@@ -9,6 +9,7 @@ from opt_obj import opt_obj
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 plt.style.use(os.path.join(os.path.dirname(__file__), "uefc.mplstyle"))
+import scipy as scipy
 
 from DS_mpay_sweep import mpay_sweep
 from DS_scan_ARS import scan_ARS
@@ -107,7 +108,7 @@ if __name__ == "__main__":
     vlm(wing, CL[50], root_angle, washout_diff)
     B = lv/b * dihedral/CL[50]
 
-    changex_cg, changex_payload = change_in_cm(x_cgoverc, 385, 250, aircraft.Sh, aircraft.Sv)
+    changex_cg, changex_payload = change_in_cm(x_cgoverc, 250, aircraft.Sh, aircraft.Sv)
     aetrim = np.linspace(-10, 10, 1000)
     plt.figure()
     plt.plot(aetrim, changex_payload, color = "#9900FF", label = "change in x payload")
@@ -116,7 +117,7 @@ if __name__ == "__main__":
     plt.legend()
     plt.xlabel("aetrim")
     plt.title("Change in cg vs Trim")
-    plt.subtitle(f'lh = {lh}, bh = {bh}, Sh = {aircraft.Sh}, Sv = {aircraft.Sv}')
+    plt.suptitle(f'lh = {lh}, bh = {bh}, Sh = {aircraft.Sh}, Sv = {aircraft.Sv}')
     plt.grid()
     plt.show()
 
