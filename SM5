@@ -15,6 +15,7 @@ Clwnom = 0.75
 CMWnom = -0.15
 
 def staticmargin(c, lh, S, Sh, AR, ARh, fe, Clwnom):
+
     #calculating additional parameters
     Vh = Sh*lh/(S*c)
     ah = 2*np.pi/(1+2/ARh)
@@ -42,34 +43,38 @@ def staticmargin(c, lh, S, Sh, AR, ARh, fe, Clwnom):
 
     return x_cgoverc, SM
 
-def change_in_cm(c, lh, S, Sh, AR, ARh, fe, Clwnom):
-    #this function is not finished because it doesn't account for the changing masses yet
 
-    Vh = Sh*lh/(S*c)
-    ah = 2*np.pi/(1+2/ARh)
-    aw = 2*np.pi/(1+2/AR)
-    zetae = np.arccos(1-2*fe)
-    ae = 2*(np.pi-zetae+np.sin(zetae))
+def change_in_cm(x_cgoverc, m_empty, m_payload): #finding the change in the cg and the change in payload location v elevator trim
+    Xempty = weight(0.195, 0.04, 0.03, 0.766, 0.156)
 
-    aetrim = np.linspace(-10, 10, 1000)
-    aerad = aetrim*(np.pi/180)
+    xpayoverc = [(m_empty+m_payload)*x_cgoverc - (m_empty*Xempty)]/m_payload
 
-    #find alpha and alpha in degrees
-    alpha = -(aerad*Vh*(c/lh))/((aw/ae)+Vh*(c/lh)*(ah/ae))
-    alphadeg = alpha * (180/np.pi)
-
-    CLW = Clwnom+aw*alpha
-    CLH = ah*alpha+ae*aerad
-
-    x_cgoverc = (1/4*CLW+(1+1/4*c/lh)*Vh*CLH-CMWnom)/(CLW+Vh*CLH*c/lh)
-
-    xpayoverc = (0.2*630*x_cgoverc*100-3352.8)/(250*0.2*100) #convert from cm to m before dividing by c you dumbass
-    changex_cg = x_cgoverc - 0.481
-    changex_payload = xpayoverc-0.54
+    changex_cg = x_cgoverc - Xempty
+    changex_payload = xpayoverc - Xempty
 
     return changex_cg, changex_payload
 
-def weight(m_wing, m_tail, m_fuselage, c, lh, l, m_nose=94.2, m_battery=53.9, m_servo=16.6, m_housing=24):
-    m_tot = m_wing+m_fuselage+m_nose+m_battery+m_servo+m_housing+m_tail
-    xovercgnom = (m_wing*0.25*c+1.5*c*m_servo+m_battery*0.5*c+lh*m_tail+(lh-l)*m_nose+l/2*m_fuselage+(l-1.5*c)*0.5*m_housing)/(c*(m_tot))
+def weight(S, Sh, Sv, l, c = 0.156): #calculates the cg of the empty plane based on weights
+    rho_balsa = 113 #kg/m^3
+    rho_foam = 25.2 #kg/m^3
+
+    l_nose = -0.125
+
+    m_nose = 94.2 #g
+    m_tail = (Sh+Sv)/0.07*14 #g
+    m_wing = 64
+    m_rbwm = 132.8 + 9.1 + 12*S/0.354
+    m_servo = 16.6
+    m_fuselage = 38.9*l/0.92
+    m_prhw = 24 * l/0.92
+
+
+    m_tot = 385
+    m_other = m_nose + m_tail + m_wing + m_rbwm + m_servo + m_fuselage + m_prhw
+
+    num = m_nose*(l_nose) + m_tail*(l+l_nose) + m_wing*0.25*c + m_rbwm*0.5*c + m_servo*1.5*c + m_fuselage*(0.5*l+l_nose) + m_prhw*((l+1.5*c)*0.5+l_nose)
+
+    xovercgnom = num / (m_tot*c)
+
+    print(m_other)
     return xovercgnom
