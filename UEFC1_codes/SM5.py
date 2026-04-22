@@ -44,8 +44,8 @@ def staticmargin(c, lh, S, Sh, AR, ARh, fe, Clwnom):
     return x_cgoverc, SM
 
 
-def change_in_cm(x_cgoverc, m_empty, m_payload, Sh, Sv): #finding the change in the cg and the change in payload location v elevator trim
-    Xempty = weight(0.195, Sh, Sv, 0.766, 0.156)
+def change_in_cm(x_cgoverc, m_payload, Sh, Sv): #finding the change in the cg and the change in payload location v elevator trim
+    Xempty, m_empty = weight(0.195, Sh, Sv, 0.766, x_cgoverc, 0.156)
     x_cgoverc = np.array(x_cgoverc)
 
     xpayoverc = ((m_empty+m_payload)*x_cgoverc - (m_empty*Xempty))/m_payload
@@ -55,12 +55,7 @@ def change_in_cm(x_cgoverc, m_empty, m_payload, Sh, Sv): #finding the change in 
 
     return changex_cg, changex_payload
 
-def weight(S, Sh, Sv, l, c = 0.156): #calculates the cg of the empty plane based on weights
-    rho_balsa = 113 #kg/m^3
-    rho_foam = 25.2 #kg/m^3
-
-    l_nose = -0.125
-
+def weight(S, Sh, Sv, l, xcgoverc, c = 0.156):
     m_nose = 94.2 #g
     m_tail = (Sh+Sv)/0.07*14 #g
     m_wing = 64
@@ -69,13 +64,18 @@ def weight(S, Sh, Sv, l, c = 0.156): #calculates the cg of the empty plane based
     m_fuselage = 38.9*l/0.92
     m_prhw = 24 * l/0.92
 
-
-    m_tot = 385
     m_other = m_nose + m_tail + m_wing + m_rbwm + m_servo + m_fuselage + m_prhw
 
+    def xcg(l_nose):
+
+        num = m_nose*(l_nose) + m_tail*(l+l_nose) + m_wing*0.25*c + m_rbwm*0.5*c + m_servo*1.5*c + m_fuselage*(0.5*l+l_nose) + m_prhw*((l+1.5*c)*0.5+l_nose)
+
+        xovercgnom = (num / (m_other*c) - xcgoverc[500])**2
+        return xovercgnom
+
+    l_nose = scipy.optimize.minimize(xcg, -0.13)
+
     num = m_nose*(l_nose) + m_tail*(l+l_nose) + m_wing*0.25*c + m_rbwm*0.5*c + m_servo*1.5*c + m_fuselage*(0.5*l+l_nose) + m_prhw*((l+1.5*c)*0.5+l_nose)
+    xovercgnom = (num / (m_other*c) - xcgoverc[500])**2
 
-    xovercgnom = num / (m_tot*c)
-
-    print(m_other)
-    return xovercgnom
+    return xovercgnom, m_other
