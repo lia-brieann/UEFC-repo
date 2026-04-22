@@ -1,7 +1,6 @@
 from GetUEFC import UEFC
 from UEFC_wing import UEFC_wing
 from GetWingWeight import GetWingWeight
-from cg_sim import staticmargin
 from vlm import vlm
 import numpy as np
 import os
@@ -14,6 +13,10 @@ plt.style.use(os.path.join(os.path.dirname(__file__), "uefc.mplstyle"))
 from DS_mpay_sweep import mpay_sweep
 from DS_scan_ARS import scan_ARS
 from DS_report_opt_obj import report_opt_obj
+
+from SM5 import staticmargin
+from SM5 import change_in_cm
+from SM5 import weight
 
 
 if __name__ == "__main__":
@@ -103,6 +106,9 @@ if __name__ == "__main__":
 
     vlm(wing, CL[50], root_angle, washout_diff)
     B = lv/b * dihedral/CL[50]
+
+    changex_cg, changex_payload = change_in_cm(x_cgoverc, 385, 250)
+
 
     print("\n##### vlm Output #####\n")
     print(f"B = {B} (must be >= 5)")
