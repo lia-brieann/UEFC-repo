@@ -14,7 +14,7 @@ from DS_mpay_sweep import mpay_sweep
 from DS_scan_ARS import scan_ARS
 from DS_report_opt_obj import report_opt_obj
 
-from SM5 import staticmargin
+from cg_sim import staticmargin
 from SM5 import change_in_cm
 from SM5 import weight
 
@@ -28,8 +28,8 @@ if __name__ == "__main__":
     aircraft.taper    = 0.60   # taper ratio
     aircraft.dihedral = 12.97   # Wing dihedral (degrees)
     aircraft.tau      = 0.12  # thickness-to-chord ratio
-    aircraft.Sh = 0.04 # Wing area of horizontal tail (m^2)
-    aircraft.Sv = 0.03 # Wing area of vertical tail (m^2)
+    aircraft.Sh = 0.03 # Wing area of horizontal tail (m^2)
+    aircraft.Sv = 0.032 # Wing area of vertical tail (m^2)
     aircraft.l_AR = 1.63 # Fuselage length to wingspan ratio (-)
     aircraft.CLdes = 0.75  # maximum CL wing will be designed to fly at (in cruise)
     aircraft.e0    = 1.00  # Span efficiency for straight level flight
@@ -83,11 +83,11 @@ if __name__ == "__main__":
 
     lv = 0.30
     lh = 0.38
-    bh = 0.525
+    bh = 0.65
 
     fe = 0.6
     Clwnom = CL[50]
-    CMWnom = -0.16 # change this
+    CMWnom = -0.13
 
     x_cgoverc, SM = staticmargin(c, b, lh, bh, S, aircraft.Sh, aircraft.Sv, lv, AR, fe, Clwnom, CMWnom)
 
@@ -107,13 +107,24 @@ if __name__ == "__main__":
     vlm(wing, CL[50], root_angle, washout_diff)
     B = lv/b * dihedral/CL[50]
 
-    changex_cg, changex_payload = change_in_cm(x_cgoverc, 385, 250)
-
+    changex_cg, changex_payload = change_in_cm(x_cgoverc, 385, 250, aircraft.Sh, aircraft.Sv)
+    aetrim = np.linspace(-10, 10, 1000)
+    plt.figure()
+    plt.plot(aetrim, changex_payload, color = "#9900FF", label = "change in x payload")
+    plt.plot(aetrim, changex_cg, color = "#0051FF", label = "change in x cg")
+    plt.plot(aetrim, SM, color = "#00FFFF", label = "SM")
+    plt.legend()
+    plt.xlabel("aetrim")
+    plt.title("Change in cg vs Trim")
+    plt.subtitle(f'lh = {lh}, bh = {bh}, Sh = {aircraft.Sh}, Sv = {aircraft.Sv}')
+    plt.grid()
+    plt.show()
 
     print("\n##### vlm Output #####\n")
     print(f"B = {B} (must be >= 5)")
     print(f"AR = {wing.get_AR()} vs. ARopt = {ARopt}")
     print(f"S = {wing.get_S()} vs. Sopt = {Sopt}")
     print(f"wing weight = {GetWingWeight(aircraft, AR, S)} g")
+
     print("\n#############################\n")
     #########################

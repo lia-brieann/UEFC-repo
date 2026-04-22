@@ -45,7 +45,7 @@ def staticmargin(c, b, lh, bh, S, Sh, Sv, lv, AR, fe, Clwnom, CMWnom):
 
     print("\n##### cg_sim Output #####\n")
     print(f'\nVh = {Vh}, (must be 0.3 <= Vh <= 0.6)')
-    print(f'Vv = {Vv}, (must be 0.02 <= Vh <= 0.05)\n')
+    print(f'Vv = {Vv}, (must be 0.02 <= Vv <= 0.05)\n')
     print(f'Clwnom = {Clwnom}\n')
     print(f'CMWnom = {CMWnom}\n')
     print("\n#############################\n")
