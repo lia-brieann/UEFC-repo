@@ -30,7 +30,7 @@ if __name__ == "__main__":
     aircraft.dihedral = 12.97   # Wing dihedral (degrees)
     aircraft.tau      = 0.12  # thickness-to-chord ratio
     aircraft.Sh = 0.03 # Wing area of horizontal tail (m^2)
-    aircraft.Sv = 0.032 # Wing area of vertical tail (m^2)
+    aircraft.Sv = 0.025 # Wing area of vertical tail (m^2)
     aircraft.l_AR = 1.63 # Fuselage length to wingspan ratio (-)
     aircraft.CLdes = 0.75  # maximum CL wing will be designed to fly at (in cruise)
     aircraft.e0    = 1.00  # Span efficiency for straight level flight
@@ -82,9 +82,9 @@ if __name__ == "__main__":
     # Vh = 0.40 # >= 0.3
     # Vv = 0.03 # >= 0.02
 
-    lv = 0.30
-    lh = 0.38
-    bh = 0.65
+    lv = 0.4
+    lh = 0.5
+    bh = 0.45
 
     fe = 0.6
     Clwnom = CL[50]
