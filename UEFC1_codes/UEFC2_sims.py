@@ -29,10 +29,10 @@ if __name__ == "__main__":
     aircraft.taper    = 0.60   # taper ratio
     aircraft.dihedral = 12.97   # Wing dihedral (degrees)
     aircraft.tau      = 0.12  # thickness-to-chord ratio
-    aircraft.Sh = 0.029 # Wing area of horizontal tail (m^2)
-    aircraft.Sv = 0.025 # Wing area of vertical tail (m^2)
+    aircraft.Sh = 0.04 # Wing area of horizontal tail (m^2)
+    aircraft.Sv = 0.03 # Wing area of vertical tail (m^2)
     aircraft.l_AR = 1.63 # Fuselage length to wingspan ratio (-)
-    aircraft.CLdes = 0.62  # maximum CL wing will be designed to fly at (in cruise)
+    aircraft.CLdes = 0.63  # maximum CL wing will be designed to fly at (in cruise)
     aircraft.e0    = 1.00  # Span efficiency for straight level flight
     aircraft.dbmax    = 0.10  # tip displacement bending constraint (<= 0.1)
     aircraft.rhofoam  = 25.2     # kg/m^3. high load foam
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     AR_end = 15.0
     S_start = 0.1
     S_end = 2.0
-    num_division = 41
+    num_division = 50
     obj_opt, ARopt, Sopt = scan_ARS(aircraft, AR_start, AR_end, S_start, S_end, num_division, show_plots=True)
 
     S  = Sopt                # Wing area (m^2)
@@ -86,8 +86,8 @@ if __name__ == "__main__":
     # Vh = 0.40 # >= 0.3
     # Vv = 0.03 # >= 0.02
 
-    lv = 0.4
-    lh = 0.5
+    lv = 0.45
+    lh = 0.3
     bh = 0.42
 
     fe = 0.6
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     B = lv/b * dihedral/CL
 
     changex_cg, changex_payload, l_nose = change_in_cm(x_cgoverc, 250, aircraft.Sh, aircraft.Sv)
-    l = 0.766
+    l = aircraft.l_AR * b # change this value ?
     d = l - (-l_nose + c*x_cgoverc[500] + lh)
     print(f'\n d = {d} ( >0.02 )\n')
 
