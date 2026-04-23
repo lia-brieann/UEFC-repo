@@ -35,15 +35,15 @@ cpn = gn*R/(gn-1)
 #### Step 1 - Fine wsh_T ####
 rm = (r_outer+r_inner)/2      # [m]
 omega = RPM*(2*math.pi/60)
-A = math.pi*(rm**2)/12      # [m^2]
+A = math.pi*(2*rm)/12*.00548      # [m^2]
 a1 = math.acos((5.48*10**(-3))/(math.pi*rm/6))      # radians
 phi  = 1/(math.tan(a2)-math.tan(B2))
 lamb = phi*(math.tan(a1)-math.tan(a2))
 wideal_T = lamb*(omega*rm)**2
 
 #### Step 2 - Assume Adiabatic Turbine and Compressor Efficiencies ####
-nc = 0.7    # we can change these
-nt = 0.7    # we can change these
+nc = 0.54    # we changed these values by comparing mdot_6 to mdot_1+mdot_f
+nt = 0.54    # we changed these values by comparing mdot_6 to mdot_1+mdot_f
 
 #### Step 3 - Find Compressor Pressure Ratio ####
 wideal_c = wideal_T
@@ -81,7 +81,9 @@ T = mdot_f/SFC      # [N]
 t = T/(mdot_1*math.sqrt(R*gi*Tt0))        # Tt0=Tinlet since the turbojet is stationary, this will change if it moves
 
 #### Step 7 - Find Turbine Mass Flow ####
-mdot_6 = mdot_1 + mdot_f
+mdot_6 = 12*Pt4*A/(math.sqrt(R*Tt4))*math.sqrt(gn)*(1+(gn-1)/2)**((-gn-1)/(2*(gn-1)))
+# print(mdot_1+mdot_f, mdot_6)
+
 
 #### Print Statements ####
 print("####### Thermodynamic cycle and mean-line model outputs: #######")
@@ -90,4 +92,5 @@ print(f'Inlet mass flow (mdot_1) is {mdot_1:.4} kg/s.')
 print(f'Turbine inlet temperature (T3) is {Tt3:.4} K.')
 print(f'Specific thrust (t) is {t:.4}.')
 print(f'Specific fuel consumption (SFC) is {SFC:.2e} (s/m)).')
+print(f'Nozzle exit mass flow (mdot_6) is {mdot_6:.4} kg/s.')
 print(f'################################################################')
