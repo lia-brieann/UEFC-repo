@@ -93,8 +93,9 @@ if __name__ == "__main__":
     fe = 0.6
     Clwnom = CL
     CMWnom = -0.13
+    ARh = bh**2/aircraft.Sh
 
-    x_cgoverc, SM, xnpoverc = staticmargin(c, b, lh, bh, S, aircraft.Sh, aircraft.Sv, lv, AR, fe, Clwnom, CMWnom)
+    x_cgoverc, SM, xnpoverc = staticmargin(c, lh,S, aircraft.Sh, AR, ARh, fe, Clwnom, CMWnom)
     print("X_cg empty", x_cgoverc[500]*c)
     print(f'xnpoverc = {xnpoverc}')
 
@@ -118,7 +119,7 @@ if __name__ == "__main__":
     B = lv/b * dihedral/CL
 
     l = b / aircraft.l_AR
-    changex_cg, changex_payload, l_nose = change_in_cm(aircraft, S, l, x_cgoverc, 250, aircraft.Sh, aircraft.Sv)
+    changex_cg, changex_payload, l_nose = change_in_cm(aircraft, AR, S, l, x_cgoverc, 250, aircraft.Sh, aircraft.Sv)
 
     print(f'l = {l}')
     print(f'l_nose = {l_nose}')
