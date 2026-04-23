@@ -135,6 +135,3 @@ class UEFC:
 if __name__ == "__main__":
 
     pass
-
-
-

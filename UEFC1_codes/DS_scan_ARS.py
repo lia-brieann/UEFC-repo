@@ -20,10 +20,10 @@ from opt_obj           import opt_obj
 from DS_report_opt_obj import report_opt_obj
 
 def scan_ARS(aircraft: UEFC,
-             AR_start: float = 5.0,
+             AR_start: float = 1.0,
              AR_end: float = 15.0,
              S_start: float = 0.1,
-             S_end: float = 0.7,
+             S_end: float = 2.0,
              num_division: int = 41,
              show_plots: bool = True,
              savefig: str = None
@@ -164,37 +164,37 @@ if __name__ == "__main__":
     aircraft = UEFC()
 
     # Payload weight
-    aircraft.mpay_g   = 250    # payload weight in grams
+    # aircraft.mpay_g   = 250    # payload weight in grams
 
-    # Geometry parameters (PLANE VANILLA)
-    S  = np.nan                  # Wing area (m^2)
-    AR = np.nan                  # Wing aspect ratio
-    aircraft.taper    = 0.50   # taper ratio
-    aircraft.dihedral = 10   # Wing dihedral (degrees)
-    aircraft.tau      = 0.12  # thickness-to-chord ratio
+    # # Geometry parameters (PLANE VANILLA)
+    # S  = np.nan                  # Wing area (m^2)
+    # AR = np.nan                  # Wing aspect ratio
+    # aircraft.taper    = 0.50   # taper ratio
+    # aircraft.dihedral = 10   # Wing dihedral (degrees)
+    # aircraft.tau      = 0.12  # thickness-to-chord ratio
 
-    # Tail parameters
-    aircraft.Sh = 0.04 # Wing area of horizontal tail (m^2)
-    aircraft.Sv = 0.03 # Wing area of vertical tail (m^2)
+    # # Tail parameters
+    # aircraft.Sh = 0.04 # Wing area of horizontal tail (m^2)
+    # aircraft.Sv = 0.03 # Wing area of vertical tail (m^2)
 
-    # Fuselage parameters
-    aircraft.l_AR = 1.63 # Fuselage length to wingspan ratio (-)
+    # # Fuselage parameters
+    # aircraft.l_AR = 1.63 # Fuselage length to wingspan ratio (-)
 
-    # Aerodynamic parameters
-    aircraft.CLdes = 0.75  # maximum CL wing will be designed to fly at (in cruise)
-    aircraft.e0    = 1.0  # Span efficiency for straight level flight
+    # # Aerodynamic parameters
+    # aircraft.CLdes = 0.75  # maximum CL wing will be designed to fly at (in cruise)
+    # aircraft.e0    = 1.0  # Span efficiency for straight level flight
 
-    # Wing bending and material properties
-    aircraft.dbmax    = 0.10  # tip displacement bending constraint
-    aircraft.rhofoam  = 32.     # kg/m^3. high load foam
-    aircraft.Efoam    = 19.3E6  # Pa.     high load foam
+    # # Wing bending and material properties
+    # aircraft.dbmax    = 0.10  # tip displacement bending constraint
+    # aircraft.rhofoam  = 32.     # kg/m^3. high load foam
+    # aircraft.Efoam    = 19.3E6  # Pa.     high load foam
 
-    num_division = 41
+    # num_division = 41
 
-    # parameters for DS.3
-    AR_start = 1.0
-    AR_end = 15.0
-    S_start = 0.1
-    S_end = 2.0
+    # # parameters for DS.3
+    # AR_start = 1.0
+    # AR_end = 15.0
+    # S_start = 0.1
+    # S_end = 2.0
 
-    scan_ARS(aircraft, AR_start, AR_end, S_start, S_end, num_division, show_plots=True)
+    # scan_ARS(aircraft, AR_start, AR_end, S_start, S_end, num_division, show_plots=True)

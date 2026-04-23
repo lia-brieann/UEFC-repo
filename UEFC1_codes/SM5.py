@@ -40,13 +40,16 @@ def staticmargin(c, lh, S, Sh, AR, ARh, fe, Clwnom):
 
     #finding static margin
     xnpoverc = ((0.25 * aw/ah) + (Vh*(1 + 0.25*(c/lh))))/ ((aw/ah) + ((c/lh)*Vh))
+    print(f'nominal point: {xnpoverc}')
     SM = xnpoverc - x_cgoverc
 
-    return x_cgoverc, SM
+    return x_cgoverc, SM, xnpoverc
 
 
-def change_in_cm(x_cgoverc, m_payload, Sh, Sv): #finding the change in the cg and the change in payload location v elevator trim
-    Xempty, m_empty = weight(0.195, Sh, Sv, 0.766, x_cgoverc, 0.156)
+def change_in_cm(UEFC,  S, l, x_cgoverc, m_payload, Sh, Sv): #finding the change in the cg and the change in payload location v elevator trim
+    c = UEFC.wing_dimensions(AR, S)["Mean chord"]
+
+    Xempty, m_empty, l_nose = weight(S, Sh, Sv, l, x_cgoverc, c)
     x_cgoverc = np.array(x_cgoverc)
 
     xpayoverc = ((m_empty+m_payload)*x_cgoverc - (m_empty*Xempty))/m_payload
@@ -54,12 +57,12 @@ def change_in_cm(x_cgoverc, m_payload, Sh, Sv): #finding the change in the cg an
     changex_cg = x_cgoverc - Xempty
     changex_payload = xpayoverc - Xempty
 
-    return changex_cg, changex_payload
+    return changex_cg, changex_payload, l_nose
 
-def weight(S, Sh, Sv, l, xcgoverc, c = 0.156):
+def weight(S, Sh, Sv, l, xcgoverc, c):
     m_nose = 94.2 #g
     m_tail = (Sh+Sv)/0.07*14 #g
-    m_wing = 64
+    m_wing = 72
     m_rbwm = 132.8 + 9.1 + 12*S/0.354
     m_servo = 16.6
     m_fuselage = 38.9*l/0.92
@@ -78,4 +81,4 @@ def weight(S, Sh, Sv, l, xcgoverc, c = 0.156):
 
     num = m_nose*(l_nose) + m_tail*(l+l_nose) + m_wing*0.25*c + m_rbwm*0.5*c + m_servo*1.5*c + m_fuselage*(0.5*l+l_nose) + m_prhw*((l+1.5*c)*0.5+l_nose)
     xovercgnom = num / (m_other*c)
-    return xovercgnom, m_other
+    return xovercgnom, m_other, l_nose
