@@ -33,6 +33,10 @@ def staticmargin(c, lh, S, Sh, AR, ARh, fe, Clwnom, CMWnom):
     alphadeg = alpha * (180/np.pi)
 
     plt.plot(aetrim, alphadeg)
+    plt.xlabel('aetrim')
+    plt.ylabel('alphadeg')
+    plt.grid(True)
+    plt.show()
 
     CLW = Clwnom+aw*alpha
     CLH = ah*alpha+ae*aerad
