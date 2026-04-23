@@ -43,7 +43,7 @@ def staticmargin(c, lh, S, Sh, AR, ARh, fe, Clwnom):
     print(f'nominal point: {xnpoverc}')
     SM = xnpoverc - x_cgoverc
 
-    return x_cgoverc, SM , xnpoverc
+    return x_cgoverc, SM, xnpoverc
 
 
 def change_in_cm(UEFC,  S, l, x_cgoverc, m_payload, Sh, Sv): #finding the change in the cg and the change in payload location v elevator trim

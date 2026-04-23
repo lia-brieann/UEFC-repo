@@ -15,7 +15,7 @@ from DS_mpay_sweep import mpay_sweep
 from DS_scan_ARS import scan_ARS
 from DS_report_opt_obj import report_opt_obj
 
-from cg_sim import staticmargin
+from SM5 import staticmargin
 from SM5 import change_in_cm
 from SM5 import weight
 
