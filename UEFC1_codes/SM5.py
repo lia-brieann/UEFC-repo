@@ -46,7 +46,7 @@ def staticmargin(c, lh, S, Sh, AR, ARh, fe, Clwnom):
 
 
 def change_in_cm(x_cgoverc, m_payload, Sh, Sv): #finding the change in the cg and the change in payload location v elevator trim
-    Xempty, m_empty = weight(0.195, Sh, Sv, 0.766, x_cgoverc, 0.156)
+    Xempty, m_empty, l_nose = weight(0.195, Sh, Sv, 0.766, x_cgoverc, 0.156)
     x_cgoverc = np.array(x_cgoverc)
 
     xpayoverc = ((m_empty+m_payload)*x_cgoverc - (m_empty*Xempty))/m_payload
@@ -54,7 +54,7 @@ def change_in_cm(x_cgoverc, m_payload, Sh, Sv): #finding the change in the cg an
     changex_cg = x_cgoverc - Xempty
     changex_payload = xpayoverc - Xempty
 
-    return changex_cg, changex_payload
+    return changex_cg, changex_payload, l_nose
 
 def weight(S, Sh, Sv, l, xcgoverc, c = 0.156):
     m_nose = 94.2 #g
@@ -78,4 +78,4 @@ def weight(S, Sh, Sv, l, xcgoverc, c = 0.156):
 
     num = m_nose*(l_nose) + m_tail*(l+l_nose) + m_wing*0.25*c + m_rbwm*0.5*c + m_servo*1.5*c + m_fuselage*(0.5*l+l_nose) + m_prhw*((l+1.5*c)*0.5+l_nose)
     xovercgnom = num / (m_other*c)
-    return xovercgnom, m_other
+    return xovercgnom, m_other, l_nose
