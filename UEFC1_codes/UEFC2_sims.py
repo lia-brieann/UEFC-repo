@@ -29,7 +29,7 @@ if __name__ == "__main__":
     aircraft.taper    = 0.60   # taper ratio
     aircraft.dihedral = 12.97   # Wing dihedral (degrees)
     aircraft.tau      = 0.12  # thickness-to-chord ratio
-    aircraft.Sh = 0.04 # Wing area of horizontal tail (m^2)
+    aircraft.Sh = 0.033 # Wing area of horizontal tail (m^2)
     aircraft.Sv = 0.03 # Wing area of vertical tail (m^2)
     aircraft.l_AR = 1.63 # Fuselage length to wingspan ratio (-)
     aircraft.CLdes = 0.63  # maximum CL wing will be designed to fly at (in cruise)
@@ -87,14 +87,16 @@ if __name__ == "__main__":
     # Vv = 0.03 # >= 0.02
 
     lv = 0.45
-    lh = 0.3
+    lh = 0.54
     bh = 0.42
 
     fe = 0.6
     Clwnom = CL
     CMWnom = -0.13
 
-    x_cgoverc, SM = staticmargin(c, b, lh, bh, S, aircraft.Sh, aircraft.Sv, lv, AR, fe, Clwnom, CMWnom)
+    x_cgoverc, SM, xnpoverc = staticmargin(c, b, lh, bh, S, aircraft.Sh, aircraft.Sv, lv, AR, fe, Clwnom, CMWnom)
+    print("X_cg empty", x_cgoverc[500]*c)
+    print(f'xnpoverc = {xnpoverc}')
 
     #########################
 
@@ -103,6 +105,9 @@ if __name__ == "__main__":
     b        = aircraft.wing_dimensions(AR, S)["Span"]
     croot    = aircraft.wing_dimensions(AR, S)["Root chord"]
     ctip     = aircraft.wing_dimensions(AR, S)["Tip chord"]
+    print(f'c = {aircraft.wing_dimensions(AR, S)["Mean chord"]}')
+    print(f'croot = {croot}')
+    print(f'b = {b}')
     agroot   = 3.0; root_angle = agroot
     washout_diff = -5.0
     agtip    = root_angle  + washout_diff
@@ -112,8 +117,11 @@ if __name__ == "__main__":
     vlm(wing, CL, root_angle, washout_diff)
     B = lv/b * dihedral/CL
 
-    changex_cg, changex_payload, l_nose = change_in_cm(x_cgoverc, 250, aircraft.Sh, aircraft.Sv)
-    l = aircraft.l_AR * b # change this value ?
+    l = b / aircraft.l_AR
+    changex_cg, changex_payload, l_nose = change_in_cm(aircraft, S, l, x_cgoverc, 250, aircraft.Sh, aircraft.Sv)
+
+    print(f'l = {l}')
+    print(f'l_nose = {l_nose}')
     d = l - (-l_nose + c*x_cgoverc[500] + lh)
     print(f'\n d = {d} ( >0.02 )\n')
 
