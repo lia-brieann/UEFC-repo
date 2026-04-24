@@ -53,3 +53,5 @@ def vlm(PV, CL, root_angle = 3.13,washout_diff = -5.0):
     print('e0     = {:.2f}'.format(e0))          # Span efficiency in level flight
 
     plt.show()
+
+    return alpha

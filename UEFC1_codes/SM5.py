@@ -4,18 +4,18 @@ import scipy as scipy
 
 
 #parameters
-c = 0.2
-lh = 0.65
-Sh = 0.04
-S = 0.354
-Vh = 0.367
-AR = 9
-ARh = (0.525)**2/0.04
-fe = 0.6
-Clwnom = 0.75
-CMWnom = -0.15
+# c = 0.2
+# lh = 0.65
+# Sh = 0.04
+# S = 0.354
+# Vh = 0.367
+# AR = 9
+# ARh = (0.525)**2/0.04
+# fe = 0.6
+# Clwnom = 0.75
+# CMWnom = -0.13
 
-def staticmargin(c, lh, S, Sh, AR, ARh, fe, Clwnom):
+def staticmargin(c, lh, S, Sh, AR, ARh, fe, Clwnom, CMWnom):
 
     #calculating additional parameters
     Vh = Sh*lh/(S*c)
@@ -32,6 +32,12 @@ def staticmargin(c, lh, S, Sh, AR, ARh, fe, Clwnom):
     alpha = -(aerad*Vh*(c/lh))/((aw/ae)+Vh*(c/lh)*(ah/ae))
     alphadeg = alpha * (180/np.pi)
 
+    plt.plot(aetrim, alphadeg)
+    plt.xlabel('aetrim')
+    plt.ylabel('alphadeg')
+    plt.grid(True)
+    plt.show()
+
     CLW = Clwnom+aw*alpha
     CLH = ah*alpha+ae*aerad
 
@@ -46,7 +52,7 @@ def staticmargin(c, lh, S, Sh, AR, ARh, fe, Clwnom):
     return x_cgoverc, SM, xnpoverc
 
 
-def change_in_cm(UEFC,  S, l, x_cgoverc, m_payload, Sh, Sv): #finding the change in the cg and the change in payload location v elevator trim
+def change_in_cm(UEFC, AR, S, l, x_cgoverc, m_payload, Sh, Sv): #finding the change in the cg and the change in payload location v elevator trim
     c = UEFC.wing_dimensions(AR, S)["Mean chord"]
 
     Xempty, m_empty, l_nose = weight(S, Sh, Sv, l, x_cgoverc, c)
