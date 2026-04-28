@@ -68,7 +68,8 @@ if __name__ == "__main__":
     print("\n##### mpay_sweep Output #####\n")
     print(f"mpay = {mpay[50]}\nCL = {CL[50]}\nCD = {CD[50]}\nT_req = {T_req[50]}\nT_max = {T_max[50]}\ndb = {db[50]}\nN = {N[50]}")
     print("\n#############################\n")
-    suptitle = f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$, $\\lambda = {aircraft.taper:.2f}$, $\\tau = {aircraft.tau}$, $(\\delta/b)_{{\\mathrm{{max}}}} = {aircraft.dbmax}$"
+    suptitle = (f"$AR = {AR:.1f}$, $S = {S:.3f}$ m$^2$, \n $C_{{L_{{\\mathrm{{des}}}}}} = {aircraft.CLdes:.2f}$,"
+                "$\\lambda = {aircraft.taper:.2f}$, $\\tau = {aircraft.tau}$, $(\\delta/b)_{{\\mathrm{{max}}}} = {aircraft.dbmax}$")
     fig.suptitle(suptitle)
     plt.show()
 
@@ -77,14 +78,13 @@ if __name__ == "__main__":
     # report_opt_obj
     aircraft.mpay_g   = 250
     report_opt_obj(aircraft, AR, S)
+
     #########################
 
 
     ##### STATIC MARGIN #####
     c = aircraft.wing_dimensions(AR, S)["Mean chord"]
     b = aircraft.wing_dimensions(AR, S)["Span"]
-    # Vh = 0.40 # >= 0.3
-    # Vv = 0.03 # >= 0.02
 
     lv = 0.45
     lh = 0.54
