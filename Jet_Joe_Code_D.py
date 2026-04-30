@@ -7,20 +7,29 @@ import matplotlib.pyplot as plt
 import math as math
 from scipy.optimize import fsolve
 
-# Breguet range equation
 LHV = 44.5 * 10**6      # [J/kg] fuel heating value
 g = 9.81 # m/s
-L_over_D = 10 # cruise L/D
+LoD = 10 # cruise L/D
+ToW_TO = 0.34 # takeoff T/W
+ToW__C = 0.1 # cruise T/W
 W0 = 32 # empty aircraft weight (lbs)
 fmax = 1.0 # fuel capacity (gal)
 rho_f = 6.843 # fuel density (lbs/gal)
 Wf = fmax * rho_f # fuel weight (lbs)
 Wtotal = (W0 + Wf)*0.453592 # total takeoff weight (kg)
 
-# need to calculate overall efficeincy based on flight speed
-alt = 2000 #ft
-c = 100 * 0.51444 #m/s
+def drone_range(mdot_f):
+    # Breguet range equation
+    alt = 2000 #ft
 
-eff_0 = np.nan # overall efficiency
-R = (LHV/g)*eff_0*(L_over_D)*np.log(W0/Wtotal)
-print(f'Range = {R} (m)\n      = {R/1000} (km)\n      = {R*0.000621371} (mi)')
+    # need to calculate overall efficiency based on flight speed
+
+    c = 100 * 0.51444 #m/s
+
+    mdot_f = np.nan # assume a constant fuel flow rate
+    mu_0 = (T*c)/(mdot_f*LHV) # overall efficiency
+    R = (LHV/g)*mu_0*(LoD)*np.log(W0/Wtotal)
+
+    print(f'Range = {R} (m)\n      = {R/1000} (km)\n      = {R*0.000621371} (mi)')
+
+    return

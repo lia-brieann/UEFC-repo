@@ -118,3 +118,7 @@ for i in [0, 1, 2, 3, 4]:
     print(f'Nozzle exit mass flow (mdot_6) is {mdot_6:.4} kg/s.')
     # print(f'Area between the turbine blades A = {12*A} m^2')
     print(f'################################################################')
+
+from Jet_Joe_Code_D import drone_range
+
+drone_range(mdot_1)
