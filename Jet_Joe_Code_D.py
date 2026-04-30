@@ -32,3 +32,9 @@ def drone_range(mdot_f, t, mdot_j):
     return R
 
 drone_range(0.001290232,4.526,0.2997)
+
+
+def static_thrust():
+    h = np.linspace(0, 15000 * 0.3048, 1000)    # altitudes from sea level to 15000 ft (expressed in m)
+    p0 = np.nan # static air density
+    return
