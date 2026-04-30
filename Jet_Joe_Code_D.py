@@ -19,11 +19,11 @@ Wf = fmax * rho_f # fuel weight (lbs)
 Wtotal = (W0 + Wf)*0.453592 # total takeoff weight (kg)
 alt = 2000 #ft
 
-def drone_range(mdot_f, t, mdot_1):
+def drone_range(mdot_f, t, mdot_j):
 
     # need to calculate overall efficiency based on flight speed
-    c = 100 * 0.51444 # m/s
-    T = t*mdot_1
+    c = 100 * 0.51444 # knots --> m/s
+    T = t*mdot_j
     mu_0 = (T*c)/(mdot_f*LHV) # overall efficiency
     R = (LHV/g)*mu_0*(LoD)*np.log(W0/Wtotal) # m
 
