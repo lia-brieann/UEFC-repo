@@ -121,4 +121,4 @@ for i in [0, 1, 2, 3, 4]:
 
 from Jet_Joe_Code_D import drone_range
 
-drone_range(mdot_1)
+drone_range(mdot_f_list[3], t, mdot_1)
