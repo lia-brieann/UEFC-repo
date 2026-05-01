@@ -20,7 +20,7 @@ Wtotal = (W0 + Wf0)*0.453592 # total takeoff weight (kg)
 W_TO = Wtotal
 alt = 2000*0.3048 #ft --> m
 
-def drone_range(mdot_f, SFC):
+def drone_range(mdot_f, t, SFC, mdot_1):
 
     # # first we find the time to reach altitude
     # a = g*(ToW_TO-1)
@@ -35,7 +35,9 @@ def drone_range(mdot_f, SFC):
     # use breguet range equation to evaluate range in cruise
     # calculate overall efficiency based on flight speed
     c = 100 * 0.51444 # knots --> m/s
-    T = mdot_f/SFC
+
+    a0 = 340 # m/s
+    T = t*mdot_1
 
     mu_0 = (T*c)/(mdot_f*LHV) # overall efficiency
     R = -(LHV/g)*mu_0*(LoD)*np.log(W0/Wtotal) # m
@@ -43,7 +45,7 @@ def drone_range(mdot_f, SFC):
 
     return R
 
-# drone_range(0.001290232,4.526,0.2997)
+drone_range(0.000225182, 2.296, 1.93e-05, 0.03215)
 
 
 def static_thrust():
