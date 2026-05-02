@@ -31,17 +31,21 @@ c = 100 # knots
 
 def alt_conditions(alt):
     """
-    alt = altitude in feet
-    rho = air density at alttitude
+    inputs:
+        alt = altitude in feet
+    returns:
+        rho = air density at alttitude
+        Tamb = ambient temperature at altitude
+        Pamb = ambient pressure at altitude
     """
 
     Tamb = 15.04 - .00649*(alt*0.3048)
     Pamb = 101.29 * ((Tamb + 273.1)/288.08)**5.256
     rho = Pamb/(.2869 * (Tamb+273.1))
 
-    return (rho,Tamb,Pamb)
+    return rho, Tamb, Pamb
 
-def drone_range(c, conditions, mdot_f, t):
+def drone_range(c, alt, mdot_f, t):
     """
     inputs:
         c = airspeed in knots
@@ -55,9 +59,7 @@ def drone_range(c, conditions, mdot_f, t):
     """
 
     # use breguet range equation to evaluate range in cruise
-    rho = conditions[0]
-    Tamb = conditions[1]
-    Pamb = conditions[2]
+    rho, Tamb, Pamb = alt_conditions(alt)
 
     mdot_i = rho*c*A
     a0 = np.sqrt(gamma*R*Tamb)
@@ -73,25 +75,29 @@ def drone_range(c, conditions, mdot_f, t):
 mdot_f = 0.000225182
 t = 2.296
 # mdot_1 = 0.03215
-conditions = alt_conditions(alt)
 
-drone_range(c*0.51444, conditions, mdot_f, t)
+drone_range(c*0.51444, alt, mdot_f, t)
 
 
-def static_thrust():
+def static_thrust(Wtotal):
 
     h = np.linspace(0, 15000, 50)    # altitudes from sea level to 15000 ft (expressed in m)
+    Wtotal = Wtotal*0.453592 # lbs --> kg
 
-    Tamb = 15.04 - .00649*(h*0.3048)
-    Pamb = 101.29 * ((Tamb + 273.1)/288.08)**5.256
-    R = 273 # J/kg*K
-    rho0 = Pamb/(.2869 * (Tamb+273.1)) # static air density
+    rho0, Tamb, Pamb = alt_conditions(h)
 
     # assume pe and p0 are equal
-    Wtotal = Wtotal*0.453592 # lbs --> kg
     T = Pamb**(2/3) * (2*rho0*A)**(1/3) # thrust?
-    s_alt = 1/(rho0*T/Wtotal)
-    s_SL = 1/(rho0[0]*T[0]/Wtotal)
+
+    plt.figure()
+    plt.plot(h, T)
+    plt.xlabel('h (ft)')
+    plt.ylabel('static thrust T')
+    plt.title(f'static thrust as a function of altitude')
+    plt.grid(True)
+
+    s_alt = 1/(rho0*ToW_TO)
+    s_SL = 1/(rho0[0]*ToW_TO)
     s_ratio = s_alt/s_SL
 
     plt.figure()
@@ -104,4 +110,4 @@ def static_thrust():
 
     return
 
-# static_thrust() # @ max RPM
+static_thrust(Wtotal) # @ max RPM
